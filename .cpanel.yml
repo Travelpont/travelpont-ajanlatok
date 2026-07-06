@@ -1,0 +1,9 @@
+---
+deployment:
+  tasks:
+    - /bin/cp -R /home/travel24/travelpont-ajanlatok-deploy/assets /home/travel24/public_html/wp-content/plugins/travelpont-ajanlatok/
+    - /bin/cp -R /home/travel24/travelpont-ajanlatok-deploy/includes /home/travel24/public_html/wp-content/plugins/travelpont-ajanlatok/
+    - /bin/cp -R /home/travel24/travelpont-ajanlatok-deploy/templates /home/travel24/public_html/wp-content/plugins/travelpont-ajanlatok/
+    - /bin/cp /home/travel24/travelpont-ajanlatok-deploy/travelpont-ajanlatok.php /home/travel24/public_html/wp-content/plugins/travelpont-ajanlatok/
+    - find /home/travel24/public_html/wp-content/plugins/travelpont-ajanlatok -type d -exec chmod 755 {} \;
+    - find /home/travel24/public_html/wp-content/plugins/travelpont-ajanlatok -type f -exec chmod 644 {} \;

@@ -1,0 +1,42 @@
+/**
+ * Travelpont Ajánlatok – Admin CSS (meta boxok)
+ */
+
+.tpa-admin-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px 20px;
+    padding: 6px 0;
+}
+
+.tpa-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tpa-field label {
+    font-size: 13px;
+}
+
+.tpa-field input,
+.tpa-field select,
+.tpa-field textarea {
+    width: 100%;
+    max-width: 420px;
+}
+
+.tpa-field .tpa-wide {
+    max-width: 100%;
+}
+
+/* Az URL mezők kapjanak teljes sort, hogy elférjen a hosszú link */
+.tpa-field-url {
+    grid-column: 1 / -1;
+}
+
+.tpa-field .description {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #646970;
+}

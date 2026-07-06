@@ -1,0 +1,295 @@
+/**
+ * Travelpont Ajánlatok – Frontend CSS
+ *
+ * BRANDING: az összes szín/lekerekítés az alábbi CSS-változókban van.
+ * Ha elkészül a végleges Travelpont arculat, elég ITT átírni az értékeket
+ * (vagy a téma Egyéni CSS-ében felülírni a :root változókat).
+ */
+
+:root {
+    --tpa-primary:       #0e7490;   /* mélytürkiz – ár, linkek */
+    --tpa-primary-dark:  #155e75;
+    --tpa-accent:        #f59e0b;   /* borostyán – CTA gombok */
+    --tpa-accent-dark:   #d97706;
+    --tpa-text:          #1f2937;
+    --tpa-text-light:    #6b7280;
+    --tpa-card-bg:       #ffffff;
+    --tpa-card-border:   #e5e7eb;
+    --tpa-radius:        14px;
+    --tpa-shadow:        0 1px 3px rgba(0, 0, 0, .08);
+    --tpa-shadow-hover:  0 10px 25px rgba(0, 0, 0, .12);
+}
+
+/* ── Kártyarács ─────────────────────────────────────────────────────────── */
+.tpa-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(var(--tpa-card-min, 270px), 1fr));
+    margin: 0;
+    padding: 0;
+}
+
+.tpa-empty {
+    text-align: center;
+    color: var(--tpa-text-light);
+    padding: 2rem 1rem;
+}
+
+/* ── Kártya ─────────────────────────────────────────────────────────────── */
+.tpa-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--tpa-card-bg);
+    border: 1px solid var(--tpa-card-border);
+    border-radius: var(--tpa-radius);
+    box-shadow: var(--tpa-shadow);
+    overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.tpa-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--tpa-shadow-hover);
+}
+
+.tpa-card-kep-link {
+    display: block;
+    text-decoration: none;
+}
+
+.tpa-card-kep {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #e0f2fe;
+}
+
+.tpa-card-kep img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    margin: 0;
+}
+
+.tpa-card-kep-ures {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+/* ── Címkék (badge) ─────────────────────────────────────────────────────── */
+.tpa-badge {
+    position: absolute;
+    top: .75rem;
+    padding: .25rem .7rem;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #fff;
+}
+
+.tpa-badge-kategoria {
+    left: .75rem;
+    background: var(--tpa-primary);
+}
+
+.tpa-badge-lejarat {
+    right: .75rem;
+    background: #dc2626;
+}
+
+/* ── Kártya törzs ───────────────────────────────────────────────────────── */
+.tpa-card-torzs {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.1rem 1.2rem 1.2rem;
+    gap: .6rem;
+}
+
+.tpa-card-cim {
+    margin: 0;
+    font-size: 1.15rem;
+    line-height: 1.35;
+}
+
+.tpa-card-cim a {
+    color: var(--tpa-text);
+    text-decoration: none;
+}
+
+.tpa-card-cim a:hover {
+    color: var(--tpa-primary);
+}
+
+.tpa-card-info {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: .9rem;
+    color: var(--tpa-text-light);
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+}
+
+.tpa-card-info li {
+    margin: 0;
+}
+
+.tpa-card-lablec {
+    margin-top: auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: .75rem;
+    padding-top: .5rem;
+    border-top: 1px solid var(--tpa-card-border);
+}
+
+.tpa-card-ar-blokk {
+    display: flex;
+    flex-direction: column;
+}
+
+.tpa-card-ar {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--tpa-primary);
+    white-space: nowrap;
+}
+
+.tpa-card-ar-megjegyzes {
+    font-size: .75rem;
+    color: var(--tpa-text-light);
+}
+
+/* ── Gombok ─────────────────────────────────────────────────────────────── */
+.tpa-gomb {
+    display: inline-block;
+    background: var(--tpa-accent);
+    color: #fff !important;
+    padding: .55rem 1.2rem;
+    border-radius: 999px;
+    font-size: .9rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    text-align: center;
+    white-space: nowrap;
+    transition: background .15s ease;
+}
+
+.tpa-gomb:hover {
+    background: var(--tpa-accent-dark);
+    color: #fff;
+}
+
+/* ── Aloldali ajánlat-doboz ─────────────────────────────────────────────── */
+.tpa-single-doboz {
+    background: var(--tpa-card-bg);
+    border: 1px solid var(--tpa-card-border);
+    border-radius: var(--tpa-radius);
+    box-shadow: var(--tpa-shadow);
+    padding: 1.5rem;
+    margin: 0 0 2rem;
+}
+
+.tpa-lejart-jelzes {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    border-radius: 8px;
+    padding: .75rem 1rem;
+    margin: 0 0 1rem;
+    font-weight: 600;
+}
+
+.tpa-single-info {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: .75rem;
+}
+
+.tpa-single-info li {
+    display: flex;
+    flex-direction: column;
+    gap: .1rem;
+    margin: 0;
+}
+
+.tpa-info-cimke {
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: var(--tpa-text-light);
+}
+
+.tpa-single-ar-blokk {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: .6rem;
+    margin-bottom: 1.25rem;
+}
+
+.tpa-single-ar {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--tpa-primary);
+}
+
+.tpa-single-ar-megjegyzes {
+    color: var(--tpa-text-light);
+    font-size: .9rem;
+}
+
+.tpa-single-gombok {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+}
+
+.tpa-single-gombok .tpa-gomb {
+    flex: 1 1 240px;
+    padding: .8rem 1.4rem;
+    font-size: 1rem;
+}
+
+.tpa-gomb-repjegy {
+    background: var(--tpa-primary);
+}
+
+.tpa-gomb-repjegy:hover {
+    background: var(--tpa-primary-dark);
+}
+
+.tpa-affiliate-kozzetetel {
+    margin: 1rem 0 0;
+    font-size: .8rem;
+    color: var(--tpa-text-light);
+    line-height: 1.5;
+}
+
+/* ── Mobil finomítások ──────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+    .tpa-grid {
+        gap: 1rem;
+    }
+
+    .tpa-card-lablec {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tpa-gomb {
+        width: 100%;
+    }
+}
