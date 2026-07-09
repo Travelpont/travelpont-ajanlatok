@@ -34,7 +34,7 @@ function tpa_register_cpt() {
         'menu_position'   => 25,
         'menu_icon'       => 'dashicons-airplane',
         'supports'        => array( 'title', 'editor', 'thumbnail' ),
-        'show_in_rest'    => false, // klasszikus szerkesztő + saját REST namespace később
+        'show_in_rest'    => true,  // blokk-szerkesztő + standard wp/v2 REST (a saját tpa/v1 namespace ettől független)
     );
 
     register_post_type( 'ajanlat', apply_filters( 'tpa_cpt_args', $args ) );
