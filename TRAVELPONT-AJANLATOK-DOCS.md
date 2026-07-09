@@ -99,12 +99,21 @@ travelpont-ajanlatok/
 `assets/css/frontend.css` tetején CSS-változók (`--tpa-primary`,
 `--tpa-accent`…) – a végleges arculatnál csak ezeket kell átírni.
 
-## Portál-kommunikáció (MÉG NINCS MEGÉPÍTVE – csak a helye van)
+## Portál-kommunikáció (v1.4.0-tól KÉSZ)
 
-`includes/rest-api.php` – jelenleg csak a publikus
-`GET /wp-json/tpa/v1/status` ping él. A tervezett CRUD endpointok listája és
-az auth-minta (Application Password + `publish_posts`) kommentben ott van,
-az aktivbalaton `bsza/v1` mintáját követve.
+`includes/rest-api.php` – teljes CRUD API a Travelpont Portal (Firebase, külön
+repó) Cloud Functions proxyja számára, az aktivbalaton `bsza/v1` mintáját
+követve. Auth: Application Password (Basic Auth) + `publish_posts`.
+
+- `GET /tpa/v1/ajanlatok` – lista (szűrés: `search`, `status`, `kategoria`, `uticel_id`)
+- `GET/PUT /tpa/v1/ajanlat/{id}`, `POST /tpa/v1/ajanlat` – egy ajánlat / létrehozás / frissítés
+- `POST /tpa/v1/ajanlat/{id}/kep` – kiemelt kép sideload URL-ből (Firebase Storage → WP média)
+- `GET /tpa/v1/meta` – kategóriák + Úticélok flat listája (a Portál form legördülőihez)
+- `GET /tpa/v1/status` – publikus ping
+
+A REST paraméterek neve megegyezik a nyers meta-kulccsal (`tpa_celallomas`,
+`tpa_ar` stb.) – nincs külön "portál-nevesítés". A mentés-sanitizálás
+(`tpa_sanitize_field_value()`, `fields.php`) közös a klasszikus admin mentéssel.
 
 ## Telepítés
 
