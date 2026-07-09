@@ -11,7 +11,7 @@
  * (A kártyán/aloldalon való megjelenítéshez a sablonban kell kiírni:
  *  tpa_mezo( get_the_ID(), 'tpa_uj_mezo' ) )
  *
- * Támogatott típusok: text, number, url, date, select, textarea
+ * Támogatott típusok: text, number, url, date, select, textarea, post_select
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -58,14 +58,35 @@ function tpa_get_fields() {
             'section'     => 'utazas',
             'placeholder' => 'pl. 4',
         ),
+        'tpa_uticel' => array(
+            'label'     => 'Úticél',
+            'type'      => 'post_select',
+            'section'   => 'utazas',
+            'post_type' => 'uticel',
+            'desc'      => 'Melyik Úticél oldalhoz (ország / tájegység / város) tartozzon ez az ajánlat? Az ajánlat automatikusan megjelenik a kiválasztott Úticél oldalán.',
+        ),
 
         // 💰 Ár és érvényesség
+        'tpa_repjegy_ar' => array(
+            'label'       => 'Repjegy ár (Ft, oda-vissza)',
+            'type'        => 'number',
+            'section'     => 'ar',
+            'placeholder' => 'pl. 78900',
+            'desc'        => 'Csak szám, tagolás nélkül. A kezdőlapi ajánlat-kártyán külön sorban jelenik meg.',
+        ),
+        'tpa_szallas_ar' => array(
+            'label'       => 'Szállás ár (Ft, teljes tartózkodásra)',
+            'type'        => 'number',
+            'section'     => 'ar',
+            'placeholder' => 'pl. 112000',
+            'desc'        => 'Csak szám, tagolás nélkül. A kezdőlapi ajánlat-kártyán külön sorban jelenik meg.',
+        ),
         'tpa_ar' => array(
-            'label'       => 'Ár (Ft)',
+            'label'       => 'Ár (Ft) – összesített',
             'type'        => 'number',
             'section'     => 'ar',
             'placeholder' => 'pl. 290900',
-            'desc'        => 'Csak szám, tagolás nélkül – a megjelenítés automatikusan tagolja.',
+            'desc'        => 'Az ajánlat aloldalán megjelenő teljes ár. Ha üresen hagyod, a repjegy + szállás ár összegét használjuk.',
         ),
         'tpa_ar_megjegyzes' => array(
             'label'       => 'Ár megjegyzés',
@@ -125,6 +146,18 @@ function tpa_mezo( $post_id, $key ) {
 function tpa_ar_format( $ar ) {
     if ( $ar === '' || $ar === null ) return '';
     return number_format( (float) $ar, 0, ',', ' ' ) . ' Ft';
+}
+
+// ── Teljes ár: a kézzel beírt "tpa_ar", vagy ha az üres, a repjegy + szállás ár összege ──
+function tpa_teljes_ar( $post_id ) {
+    $ar = tpa_mezo( $post_id, 'tpa_ar' );
+    if ( $ar !== '' ) return $ar;
+
+    $repjegy = tpa_mezo( $post_id, 'tpa_repjegy_ar' );
+    $szallas = tpa_mezo( $post_id, 'tpa_szallas_ar' );
+    if ( $repjegy === '' && $szallas === '' ) return '';
+
+    return (string) ( (float) $repjegy + (float) $szallas );
 }
 
 // ── Lejárt-e az ajánlat? ──────────────────────────────────────────────────────

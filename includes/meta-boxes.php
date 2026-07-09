@@ -77,6 +77,20 @@ function tpa_render_field( $post_id, $key, $field ) {
             echo '</select>';
             break;
 
+        case 'post_select':
+            // Hierarchikus legördülő egy másik (jellemzően hierarchikus) post type-ból,
+            // pl. az Úticél CPT – behúzással jelzi az ország/tájegység/város szintet.
+            wp_dropdown_pages( array(
+                'post_type'         => isset( $field['post_type'] ) ? $field['post_type'] : 'post',
+                'name'              => $key,
+                'id'                => $key,
+                'selected'          => $value,
+                'show_option_none'  => '— nincs kiválasztva —',
+                'option_none_value' => '',
+                'sort_column'       => 'menu_order,post_title',
+            ) );
+            break;
+
         case 'number':
             printf(
                 '<input type="number" id="%1$s" name="%1$s" value="%2$s" placeholder="%3$s" min="0" step="1">',
@@ -136,6 +150,10 @@ add_action( 'save_post_ajanlat', function( $post_id ) {
             case 'select':
                 $options = isset( $field['options'] ) ? $field['options'] : array();
                 $value   = array_key_exists( $raw, $options ) ? $raw : '';
+                break;
+            case 'post_select':
+                $post_id_value = absint( $raw );
+                $value         = ( $post_id_value && get_post( $post_id_value ) ) ? (string) $post_id_value : '';
                 break;
             case 'textarea':
                 $value = sanitize_textarea_field( $raw );

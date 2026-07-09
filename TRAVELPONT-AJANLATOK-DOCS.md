@@ -1,9 +1,21 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.0.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.2.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
 > (minta: `E:\aktivbalaton.hu\Saját pluginok\_AKTIV\balaton-szallasok`)
 > SZABÁLY: minden módosításkor verziót emelünk a fő fájl fejlécében
 > (cache-buster + követhetőség).
+>
+> **1.2.0**: új `tpa_repjegy_ar` és `tpa_szallas_ar` mező ("Ár és
+> érvényesség" doboz) – külön repjegy/szállás ár, amit a kezdőlap
+> (`travelpont-kezdolap` plugin) az ajánlat-kártyákon külön sorban jelenít
+> meg. A meglévő `tpa_ar` mostantól opcionális: ha üresen hagyod, a
+> `tpa_teljes_ar()` a repjegy+szállás összegét adja vissza helyette
+> (a meglévő kártya/aloldal sablonok is ezt hívják).
+>
+> **1.1.0**: új `tpa_uticel` mező ("Utazás adatai" doboz) – összeköti az
+> ajánlatot egy Úticél oldallal (`travelpont-uticelok` plugin). Ehhez új,
+> általános mezőtípus is bekerült: `post_select` (hierarchikus legördülő
+> bármely post type-hoz, `wp_dropdown_pages()` alapon).
 
 ## Mit tud?
 
@@ -62,7 +74,7 @@ travelpont-ajanlatok/
    ```php
    'tpa_fok_szama' => array(
        'label'   => 'Utasok száma',
-       'type'    => 'number',        // text | number | url | date | select | textarea
+       'type'    => 'number',        // text | number | url | date | select | textarea | post_select
        'section' => 'utazas',        // melyik admin dobozba kerüljön
        'desc'    => 'Hány főre szól az ár.',
    ),
