@@ -9,6 +9,8 @@
  *   POST /tpa/v1/ajanlat            – Ajánlat létrehozása
  *   PUT  /tpa/v1/ajanlat/{id}       – Ajánlat frissítése
  *   POST /tpa/v1/ajanlat/{id}/kep   – Kiemelt kép sideload URL-ből
+ *   POST /tpa/v1/ajanlat/{id}/galeria             – Galéria-kép hozzáadása URL-ből
+ *   DELETE /tpa/v1/ajanlat/{id}/galeria/{kep_id}   – Galéria-kép eltávolítása
  *   GET  /tpa/v1/meta               – Kategóriák + Úticélok listája (Portál form-mezőkhöz)
  *   GET  /tpa/v1/status             – Publikus ping
  *
@@ -67,6 +69,21 @@ add_action( 'rest_api_init', function() {
         ),
     ) );
 
+    register_rest_route( 'tpa/v1', '/ajanlat/(?P<id>\d+)/galeria', array(
+        'methods'             => WP_REST_Server::CREATABLE,
+        'callback'            => 'tpa_api_galeria_add',
+        'permission_callback' => 'tpa_api_auth',
+        'args'                => array(
+            'url' => array( 'type' => 'string', 'required' => true ),
+        ),
+    ) );
+
+    register_rest_route( 'tpa/v1', '/ajanlat/(?P<id>\d+)/galeria/(?P<kep_id>\d+)', array(
+        'methods'             => WP_REST_Server::DELETABLE,
+        'callback'            => 'tpa_api_galeria_remove',
+        'permission_callback' => 'tpa_api_auth',
+    ) );
+
     register_rest_route( 'tpa/v1', '/meta', array(
         'methods'             => WP_REST_Server::READABLE,
         'callback'            => 'tpa_api_meta',
@@ -123,6 +140,8 @@ function tpa_api_format( $post_id ) {
     $thumb_id  = (int) get_post_thumbnail_id( $post_id );
     $thumb_url = $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'medium_large' ) : '';
 
+    $galeria_ids = tpa_api_galeria_ids( $post_id );
+
     $ar_szamitott = tpa_teljes_ar( $post_id );
 
     $data = array(
@@ -143,6 +162,8 @@ function tpa_api_format( $post_id ) {
         'seo_metadesc'    => get_post_meta( $post_id, '_yoast_wpseo_metadesc', true ),
         'thumbnail_id'    => $thumb_id,
         'thumbnail_url'   => $thumb_url ?: '',
+        'galeria_ids'     => $galeria_ids,
+        'galeria_urls'    => tpa_api_galeria_urls( $galeria_ids ),
         'permalink'       => get_permalink( $post_id ) ?: '',
         'edit_url'        => admin_url( "post.php?post={$post_id}&action=edit" ),
         'created_at'      => get_post_field( 'post_date', $post_id ),
@@ -310,22 +331,13 @@ function tpa_api_update( WP_REST_Request $req ) {
     return rest_ensure_response( tpa_api_format( $id ) );
 }
 
-// ── POST /tpa/v1/ajanlat/{id}/kep – Kiemelt kép sideload URL-ből ──────────────
-function tpa_api_sideload_image( WP_REST_Request $req ) {
+// ── Közös: kép letöltése URL-ből és sideload a média könyvtárba ───────────────
+// Visszaad: attachment_id (int) vagy WP_Error. Használja a kiemelt kép ÉS a
+// galéria sideload is – innen nincs mit duplikálni köztük.
+function tpa_download_and_sideload( $post_id, $url ) {
     require_once ABSPATH . 'wp-admin/includes/media.php';
     require_once ABSPATH . 'wp-admin/includes/file.php';
     require_once ABSPATH . 'wp-admin/includes/image.php';
-
-    $post_id = (int) $req->get_param( 'id' );
-    $url     = esc_url_raw( $req->get_param( 'url' ) );
-
-    $post = get_post( $post_id );
-    if ( ! $post || $post->post_type !== 'ajanlat' ) {
-        return new WP_Error( 'not_found', 'Ajánlat nem található', array( 'status' => 404 ) );
-    }
-    if ( ! $url ) {
-        return new WP_Error( 'no_url', 'URL megadása kötelező', array( 'status' => 400 ) );
-    }
 
     $tmp = download_url( $url, 30 );
     if ( is_wp_error( $tmp ) ) {
@@ -344,12 +356,90 @@ function tpa_api_sideload_image( WP_REST_Request $req ) {
         return new WP_Error( 'sideload_failed', 'Importálás sikertelen: ' . $attachment_id->get_error_message(), array( 'status' => 500 ) );
     }
 
+    return (int) $attachment_id;
+}
+
+// ── Galéria: nyers ID-lista lekérése + URL-ekre feloldása ─────────────────────
+function tpa_api_galeria_ids( $post_id ) {
+    $ids = get_post_meta( $post_id, 'tpa_galeria_ids', true );
+    return is_array( $ids ) ? array_map( 'intval', $ids ) : array();
+}
+
+function tpa_api_galeria_urls( $ids ) {
+    return array_values( array_filter( array_map( function( $id ) {
+        return wp_get_attachment_image_url( $id, 'medium_large' ) ?: '';
+    }, $ids ) ) );
+}
+
+// ── POST /tpa/v1/ajanlat/{id}/kep – Kiemelt kép sideload URL-ből ──────────────
+function tpa_api_sideload_image( WP_REST_Request $req ) {
+    $post_id = (int) $req->get_param( 'id' );
+    $url     = esc_url_raw( $req->get_param( 'url' ) );
+
+    $post = get_post( $post_id );
+    if ( ! $post || $post->post_type !== 'ajanlat' ) {
+        return new WP_Error( 'not_found', 'Ajánlat nem található', array( 'status' => 404 ) );
+    }
+    if ( ! $url ) {
+        return new WP_Error( 'no_url', 'URL megadása kötelező', array( 'status' => 400 ) );
+    }
+
+    $attachment_id = tpa_download_and_sideload( $post_id, $url );
+    if ( is_wp_error( $attachment_id ) ) return $attachment_id;
+
     set_post_thumbnail( $post_id, $attachment_id );
 
     return rest_ensure_response( array(
         'attachment_id' => $attachment_id,
         'url'           => wp_get_attachment_image_url( $attachment_id, 'medium_large' ) ?: wp_get_attachment_url( $attachment_id ),
         'full_url'      => wp_get_attachment_url( $attachment_id ),
+    ) );
+}
+
+// ── POST /tpa/v1/ajanlat/{id}/galeria – Galéria-kép hozzáadása URL-ből ────────
+function tpa_api_galeria_add( WP_REST_Request $req ) {
+    $post_id = (int) $req->get_param( 'id' );
+    $url     = esc_url_raw( $req->get_param( 'url' ) );
+
+    $post = get_post( $post_id );
+    if ( ! $post || $post->post_type !== 'ajanlat' ) {
+        return new WP_Error( 'not_found', 'Ajánlat nem található', array( 'status' => 404 ) );
+    }
+    if ( ! $url ) {
+        return new WP_Error( 'no_url', 'URL megadása kötelező', array( 'status' => 400 ) );
+    }
+
+    $attachment_id = tpa_download_and_sideload( $post_id, $url );
+    if ( is_wp_error( $attachment_id ) ) return $attachment_id;
+
+    $ids   = tpa_api_galeria_ids( $post_id );
+    $ids[] = $attachment_id;
+    update_post_meta( $post_id, 'tpa_galeria_ids', $ids );
+
+    return rest_ensure_response( array(
+        'galeria_ids'  => $ids,
+        'galeria_urls' => tpa_api_galeria_urls( $ids ),
+    ) );
+}
+
+// ── DELETE /tpa/v1/ajanlat/{id}/galeria/{kep_id} – Galéria-kép eltávolítása ───
+// Csak a galéria-listából veszi ki (nem törli magát a médiatár-elemet – az
+// máshol is használatban lehet).
+function tpa_api_galeria_remove( WP_REST_Request $req ) {
+    $post_id = (int) $req->get_param( 'id' );
+    $kep_id  = (int) $req->get_param( 'kep_id' );
+
+    $post = get_post( $post_id );
+    if ( ! $post || $post->post_type !== 'ajanlat' ) {
+        return new WP_Error( 'not_found', 'Ajánlat nem található', array( 'status' => 404 ) );
+    }
+
+    $ids = array_values( array_diff( tpa_api_galeria_ids( $post_id ), array( $kep_id ) ) );
+    update_post_meta( $post_id, 'tpa_galeria_ids', $ids );
+
+    return rest_ensure_response( array(
+        'galeria_ids'  => $ids,
+        'galeria_urls' => tpa_api_galeria_urls( $ids ),
     ) );
 }
 
