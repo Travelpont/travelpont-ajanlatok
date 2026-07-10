@@ -14,6 +14,10 @@
  *
  * Auth: WordPress Application Password (Basic Auth) + publish_posts capability
  * (a Travelpont Portal Firebase Cloud Function proxyja hívja, sosem a böngésző közvetlenül).
+ *
+ * Yoast SEO mezők (seo_title/seo_metadesc) a create/update végpontokon keresztül
+ * íródnak/olvasódnak (_yoast_wpseo_title / _yoast_wpseo_metadesc postmeta) – NEM a
+ * tpa_get_fields() rendszer része, mert ezek Yoast saját mezői, nem a plugin sajátjai.
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -93,6 +97,8 @@ function tpa_api_args() {
         'content' => array( 'type' => 'string', 'default'  => '' ),
         'status'  => array( 'type' => 'string', 'default'  => 'publish', 'enum' => array( 'publish', 'draft' ) ),
         'kategoriak' => array( 'type' => 'array', 'default' => array(), 'items' => array( 'type' => 'string' ) ),
+        'seo_title'    => array( 'type' => 'string', 'default' => '' ),
+        'seo_metadesc' => array( 'type' => 'string', 'default' => '' ),
     );
 
     foreach ( tpa_get_fields() as $key => $field ) {
@@ -133,6 +139,8 @@ function tpa_api_format( $post_id ) {
         'szallas_platform_nev' => tpa_szallas_platform_nev( $post_id ),
         'kategoriak'      => $kategoriak,
         'kategoria_ids'   => $kategoria_ids,
+        'seo_title'       => get_post_meta( $post_id, '_yoast_wpseo_title', true ),
+        'seo_metadesc'    => get_post_meta( $post_id, '_yoast_wpseo_metadesc', true ),
         'thumbnail_id'    => $thumb_id,
         'thumbnail_url'   => $thumb_url ?: '',
         'permalink'       => get_permalink( $post_id ) ?: '',
@@ -166,7 +174,37 @@ function tpa_api_save_fields( $post_id, WP_REST_Request $req ) {
         wp_set_post_terms( $post_id, $names, 'ajanlat_kategoria' );
     }
 
+    if ( $req->get_param( 'seo_title' ) !== null ) {
+        update_post_meta( $post_id, '_yoast_wpseo_title', sanitize_text_field( $req->get_param( 'seo_title' ) ) );
+    }
+    if ( $req->get_param( 'seo_metadesc' ) !== null ) {
+        update_post_meta( $post_id, '_yoast_wpseo_metadesc', sanitize_textarea_field( $req->get_param( 'seo_metadesc' ) ) );
+    }
+    if ( $req->get_param( 'seo_title' ) !== null || $req->get_param( 'seo_metadesc' ) !== null ) {
+        tpa_yoast_indexable_frissit( $post_id );
+    }
+
     do_action( 'tpa_after_save_meta', $post_id );
+}
+
+// ── Yoast SEO indexable frissítése REST mentés után ───────────────────────────
+// A REST API update_post_meta()-val ír, NEM a Yoast admin metabox save_post
+// hookján át – ezért a Yoast belső indexable-cache tábláját (wp_yoast_indexable,
+// Yoast 14+) direktben kell frissíteni, különben a sitemap/SEO-elemzés a régi
+// értékeket mutatja, amíg valaki meg nem nyitja a bejegyzést a klasszikus szerkesztőben.
+function tpa_yoast_indexable_frissit( $post_id ) {
+    if ( ! function_exists( 'YoastSEO' ) ) {
+        clean_post_cache( $post_id );
+        return;
+    }
+    try {
+        $repository = YoastSEO()->classes->get( 'Yoast\WP\SEO\Repositories\Indexable_Repository' );
+        $builder    = YoastSEO()->classes->get( 'Yoast\WP\SEO\Builders\Indexable_Builder' );
+        $indexable  = $repository->find_by_id_and_type( $post_id, 'post', false );
+        $builder->build_for_id_and_type( $post_id, 'post', $indexable );
+    } catch ( \Throwable $e ) {
+        clean_post_cache( $post_id );
+    }
 }
 
 // ── GET /tpa/v1/ajanlatok – Lista ──────────────────────────────────────────────
