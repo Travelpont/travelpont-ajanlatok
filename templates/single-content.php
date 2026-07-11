@@ -52,6 +52,21 @@ $lejart        = tpa_lejart( $post_id );
         </div>
     <?php endif; ?>
 
+    <?php
+    // ── Galéria (a Portálból feltöltött további fotók, tpa_galeria_ids meta) ──
+    $galeria_idk = get_post_meta( $post_id, 'tpa_galeria_ids', true );
+    $galeria_idk = is_array( $galeria_idk ) ? array_map( 'intval', $galeria_idk ) : array();
+    if ( $galeria_idk ) : ?>
+        <div class="tpa-galeria">
+            <?php foreach ( $galeria_idk as $kep_id ) :
+                if ( ! wp_attachment_is_image( $kep_id ) ) continue; ?>
+                <a href="<?php echo esc_url( wp_get_attachment_url( $kep_id ) ); ?>" class="tpa-galeria-elem" target="_blank" rel="noopener">
+                    <?php echo wp_get_attachment_image( $kep_id, 'medium_large', false, array( 'loading' => 'lazy', 'alt' => get_the_title( $post_id ) ) ); ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
     <?php if ( ! $lejart && ( $kiwi_link || $szallas_link ) ) : ?>
         <div class="tpa-single-gombok">
             <?php if ( $kiwi_link ) : ?>
