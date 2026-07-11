@@ -30,13 +30,13 @@
         overlay.setAttribute('role', 'dialog');
         overlay.setAttribute('aria-modal', 'true');
         overlay.innerHTML =
-            '<button class="tpa-lightbox-close" type="button" aria-label="Bezárás">&times;</button>' +
-            '<button class="tpa-lightbox-nav tpa-lightbox-prev" type="button" aria-label="Előző kép">&#8249;</button>' +
+            '<button class="tpa-lightbox-close" type="button" aria-label="Bezárás"></button>' +
+            '<button class="tpa-lightbox-nav tpa-lightbox-prev" type="button" aria-label="Előző kép"></button>' +
             '<figure class="tpa-lightbox-tartalom">' +
                 '<img class="tpa-lightbox-kep" alt="">' +
                 '<figcaption class="tpa-lightbox-felirat"></figcaption>' +
             '</figure>' +
-            '<button class="tpa-lightbox-nav tpa-lightbox-next" type="button" aria-label="Következő kép">&#8250;</button>';
+            '<button class="tpa-lightbox-nav tpa-lightbox-next" type="button" aria-label="Következő kép"></button>';
         document.body.appendChild(overlay);
 
         imgEl     = overlay.querySelector('.tpa-lightbox-kep');
