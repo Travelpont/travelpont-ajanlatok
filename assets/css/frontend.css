@@ -340,6 +340,7 @@
     border: none;
     padding: 0;
     cursor: pointer;
+    outline: none;
     -webkit-appearance: none;
     appearance: none;
 }
@@ -361,7 +362,9 @@
 }
 
 .tpa-lightbox-close:hover::before,
-.tpa-lightbox-nav:hover::before {
+.tpa-lightbox-nav:hover::before,
+.tpa-lightbox-close:focus-visible::before,
+.tpa-lightbox-nav:focus-visible::before {
     transform: scale(1.12);
 }
 
