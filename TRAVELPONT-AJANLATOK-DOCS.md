@@ -1,9 +1,18 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.9.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.9.1 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
 > (minta: `E:\aktivbalaton.hu\Saját pluginok\_AKTIV\balaton-szallasok`)
 > SZABÁLY: minden módosításkor verziót emelünk a fő fájl fejlécében
 > (cache-buster + követhetőség).
+>
+> **1.9.1**: aloldali dizájn-frissítés (első "csak szállás" ajánlat éles
+> visszajelzése alapján) – a kiemelt kép mostantól megjelenik az aloldal
+> tetején (eddig SOSEM jelent meg ott, csak a kártyán), az ár+CTA-gombok
+> egy kiemelt panelbe kerültek, a galéria-rács `auto-fit`-re javítva (a
+> régi `auto-fill` felesleges üres oszlopokat tartott fenn kevés kép
+> esetén). Új `includes/icons.php` (`tpa_icon()`) – a kártya és az
+> aloldal infó-sorának emoji-ikonjai (📍📅🛏️⏳) saját, egyszínű SVG
+> ikonokra cserélve a konzisztens megjelenésért.
 >
 > **1.9.0**: az ajánlat többé nincs kizárólag repülő+szállás kombóra
 > kihegyezve. Új `tpa_ajanlat_tipus` select mező ("Utazás adatai" doboz,

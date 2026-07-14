@@ -45,15 +45,15 @@ $elso_kategoria = ( $kategoriak && ! is_wp_error( $kategoriak ) ) ? current( $ka
 
         <ul class="tpa-card-info">
             <?php if ( $celallomas ) : ?>
-                <li>📍 <?php echo esc_html( $celallomas ); ?></li>
+                <li><?php echo tpa_icon( 'pin' ); ?><?php echo esc_html( $celallomas ); ?></li>
             <?php endif; ?>
             <?php if ( $idopont ) : ?>
-                <li>📅 <?php echo esc_html( $idopont ); ?></li>
+                <li><?php echo tpa_icon( 'calendar' ); ?><?php echo esc_html( $idopont ); ?></li>
             <?php endif; ?>
             <?php if ( $ejszakak !== '' ) : ?>
-                <li>🛏️ <?php echo esc_html( $ejszakak ); ?> éjszaka<?php echo $indulas ? ' · ' . esc_html( $indulas ) . ' indulással' : ''; ?></li>
+                <li><?php echo tpa_icon( 'moon' ); ?><?php echo esc_html( $ejszakak ); ?> éjszaka<?php echo $indulas ? ' · ' . esc_html( $indulas ) . ' indulással' : ''; ?></li>
             <?php elseif ( $indulas ) : ?>
-                <li>🛫 Indulás: <?php echo esc_html( $indulas ); ?></li>
+                <li><?php echo tpa_icon( 'send' ); ?>Indulás: <?php echo esc_html( $indulas ); ?></li>
             <?php endif; ?>
         </ul>
 

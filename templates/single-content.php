@@ -2,6 +2,8 @@
 /**
  * Travelpont Ajánlatok – Ajánlat-doboz az aloldalon
  * (a leírás elé fűzve jelenik meg, lásd includes/single-display.php)
+ *
+ * Szerkezet: hero kép → infó-sor (chip-ek) → kiemelt ár+CTA panel → galéria.
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -26,29 +28,68 @@ $lejart        = tpa_lejart( $post_id );
         <p class="tpa-lejart-jelzes">⚠️ Ez az ajánlat sajnos már lejárt – az árak és a linkek már nem érvényesek. Nézd meg az aktuális ajánlatainkat!</p>
     <?php endif; ?>
 
+    <?php if ( has_post_thumbnail( $post_id ) ) : ?>
+        <div class="tpa-single-hero">
+            <?php echo get_the_post_thumbnail( $post_id, 'large' ); ?>
+        </div>
+    <?php endif; ?>
+
     <ul class="tpa-single-info">
         <?php if ( $celallomas ) : ?>
-            <li><span class="tpa-info-cimke">📍 Úti cél</span><span><?php echo esc_html( $celallomas ); ?></span></li>
+            <li><?php echo tpa_icon( 'pin' ); ?><span class="tpa-info-cimke">Úti cél</span><span class="tpa-info-ertek"><?php echo esc_html( $celallomas ); ?></span></li>
         <?php endif; ?>
         <?php if ( $indulas ) : ?>
-            <li><span class="tpa-info-cimke">🛫 Indulás</span><span><?php echo esc_html( $indulas ); ?></span></li>
+            <li><?php echo tpa_icon( 'send' ); ?><span class="tpa-info-cimke">Indulás</span><span class="tpa-info-ertek"><?php echo esc_html( $indulas ); ?></span></li>
         <?php endif; ?>
         <?php if ( $idopont ) : ?>
-            <li><span class="tpa-info-cimke">📅 Időpont</span><span><?php echo esc_html( $idopont ); ?></span></li>
+            <li><?php echo tpa_icon( 'calendar' ); ?><span class="tpa-info-cimke">Időpont</span><span class="tpa-info-ertek"><?php echo esc_html( $idopont ); ?></span></li>
         <?php endif; ?>
         <?php if ( $ejszakak !== '' ) : ?>
-            <li><span class="tpa-info-cimke">🛏️ Éjszakák</span><span><?php echo esc_html( $ejszakak ); ?></span></li>
+            <li><?php echo tpa_icon( 'moon' ); ?><span class="tpa-info-cimke">Éjszakák</span><span class="tpa-info-ertek"><?php echo esc_html( $ejszakak ); ?></span></li>
         <?php endif; ?>
         <?php if ( $ervenyes && ! $lejart ) : ?>
-            <li><span class="tpa-info-cimke">⏳ Érvényes</span><span><?php echo esc_html( $ervenyes ); ?>-ig</span></li>
+            <li><?php echo tpa_icon( 'clock' ); ?><span class="tpa-info-cimke">Érvényes</span><span class="tpa-info-ertek"><?php echo esc_html( $ervenyes ); ?>-ig</span></li>
         <?php endif; ?>
     </ul>
 
-    <?php if ( $ar !== '' ) : ?>
-        <div class="tpa-single-ar-blokk">
-            <span class="tpa-single-ar"><?php echo esc_html( tpa_ar_format( $ar ) ); ?></span>
-            <?php if ( $ar_megjegyzes ) : ?>
-                <span class="tpa-single-ar-megjegyzes"><?php echo esc_html( $ar_megjegyzes ); ?></span>
+    <?php if ( $ar !== '' || ( ! $lejart && ( $kiwi_link || $busz_link || $szallas_link ) ) ) : ?>
+        <div class="tpa-single-ar-panel">
+            <?php if ( $ar !== '' ) : ?>
+                <div class="tpa-single-ar-blokk">
+                    <span class="tpa-single-ar"><?php echo esc_html( tpa_ar_format( $ar ) ); ?></span>
+                    <?php if ( $ar_megjegyzes ) : ?>
+                        <span class="tpa-single-ar-megjegyzes"><?php echo esc_html( $ar_megjegyzes ); ?></span>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if ( ! $lejart && ( $kiwi_link || $busz_link || $szallas_link ) ) : ?>
+                <div class="tpa-single-gombok">
+                    <?php if ( $kiwi_link ) : ?>
+                        <a class="tpa-gomb tpa-gomb-repjegy" href="<?php echo esc_url( $kiwi_link ); ?>"
+                           target="_blank" rel="nofollow sponsored noopener">
+                            ✈️ Repülőjegy megnézése
+                        </a>
+                    <?php endif; ?>
+                    <?php if ( $busz_link ) : ?>
+                        <a class="tpa-gomb tpa-gomb-busz" href="<?php echo esc_url( $busz_link ); ?>"
+                           target="_blank" rel="nofollow sponsored noopener">
+                            🚌 Buszjegy megnézése
+                        </a>
+                    <?php endif; ?>
+                    <?php if ( $szallas_link ) : ?>
+                        <a class="tpa-gomb tpa-gomb-szallas" href="<?php echo esc_url( $szallas_link ); ?>"
+                           target="_blank" rel="nofollow sponsored noopener">
+                            🏨 Szállás megnézése<?php echo $platform_nev ? ' – ' . esc_html( $platform_nev ) : ''; ?>
+                        </a>
+                    <?php endif; ?>
+                </div>
+                <p class="tpa-affiliate-kozzetetel">
+                    <?php echo esc_html( apply_filters(
+                        'tpa_affiliate_kozzetetel_szoveg',
+                        'A fenti linkek affiliate linkek: ha rajtuk keresztül foglalsz, a Travelpont jutalékot kap – neked ez semmivel sem kerül többe. Köszönjük, hogy így támogatod a munkánkat! 💛'
+                    ) ); ?>
+                </p>
             <?php endif; ?>
         </div>
     <?php endif; ?>
@@ -73,35 +114,6 @@ $lejart        = tpa_lejart( $post_id );
                 </figure>
             <?php endforeach; ?>
         </div>
-    <?php endif; ?>
-
-    <?php if ( ! $lejart && ( $kiwi_link || $busz_link || $szallas_link ) ) : ?>
-        <div class="tpa-single-gombok">
-            <?php if ( $kiwi_link ) : ?>
-                <a class="tpa-gomb tpa-gomb-repjegy" href="<?php echo esc_url( $kiwi_link ); ?>"
-                   target="_blank" rel="nofollow sponsored noopener">
-                    ✈️ Repülőjegy megnézése
-                </a>
-            <?php endif; ?>
-            <?php if ( $busz_link ) : ?>
-                <a class="tpa-gomb tpa-gomb-busz" href="<?php echo esc_url( $busz_link ); ?>"
-                   target="_blank" rel="nofollow sponsored noopener">
-                    🚌 Buszjegy megnézése
-                </a>
-            <?php endif; ?>
-            <?php if ( $szallas_link ) : ?>
-                <a class="tpa-gomb tpa-gomb-szallas" href="<?php echo esc_url( $szallas_link ); ?>"
-                   target="_blank" rel="nofollow sponsored noopener">
-                    🏨 Szállás megnézése<?php echo $platform_nev ? ' – ' . esc_html( $platform_nev ) : ''; ?>
-                </a>
-            <?php endif; ?>
-        </div>
-        <p class="tpa-affiliate-kozzetetel">
-            <?php echo esc_html( apply_filters(
-                'tpa_affiliate_kozzetetel_szoveg',
-                'A fenti linkek affiliate linkek: ha rajtuk keresztül foglalsz, a Travelpont jutalékot kap – neked ez semmivel sem kerül többe. Köszönjük, hogy így támogatod a munkánkat! 💛'
-            ) ); ?>
-        </p>
     <?php endif; ?>
 
     <?php do_action( 'tpa_single_doboz_vege', $post_id ); // bővítési pont ?>
