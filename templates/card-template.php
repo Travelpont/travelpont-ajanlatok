@@ -23,7 +23,7 @@ $elso_kategoria = ( $kategoriak && ! is_wp_error( $kategoriak ) ) ? current( $ka
             <?php if ( has_post_thumbnail() ) : ?>
                 <?php the_post_thumbnail( 'medium_large' ); ?>
             <?php else : ?>
-                <div class="tpa-card-kep-ures">✈️</div>
+                <div class="tpa-card-kep-ures">🧳</div>
             <?php endif; ?>
 
             <?php if ( $elso_kategoria ) : ?>

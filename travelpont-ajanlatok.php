@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Travelpont Ajánlatok
  * Plugin URI:  https://travelpont.hu
- * Description: Repjegy + szállás ajánlatok kezelése és kártyás megjelenítése – ACF-mentes, önálló plugin, az aktivbalaton.hu plugin-konvenciók mintájára.
- * Version:     1.8.9
+ * Description: Repülő-, busz- vagy csak szállás-ajánlatok kezelése és kártyás megjelenítése – ACF-mentes, önálló plugin, az aktivbalaton.hu plugin-konvenciók mintájára.
+ * Version:     1.9.0
  * Author:      travelpont.hu
  * Text Domain: travelpont-ajanlatok
  */
@@ -64,5 +64,10 @@ add_action( 'admin_enqueue_scripts', function() {
         'travelpont-ajanlatok-admin',
         TPA_URL . 'assets/css/admin.css',
         array(), TPA_VERSION
+    );
+    wp_enqueue_script(
+        'travelpont-ajanlatok-admin-tipus-toggle',
+        TPA_URL . 'assets/js/admin-tipus-toggle.js',
+        array(), TPA_VERSION, true
     );
 } );

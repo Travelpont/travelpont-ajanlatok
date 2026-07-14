@@ -31,6 +31,18 @@ function tpa_get_fields() {
     $fields = array(
 
         // 🧳 Utazás adatai
+        'tpa_ajanlat_tipus' => array(
+            'label'   => 'Ajánlat típusa',
+            'type'    => 'select',
+            'section' => 'utazas',
+            'options' => array(
+                'repulo_szallas' => '✈️ Repülő + szállás',
+                'busz_szallas'   => '🚌 Busz (Flixbus) + szállás',
+                'csak_szallas'   => '🏨 Csak szállás (egyéni utazás)',
+            ),
+            'default' => 'repulo_szallas',
+            'desc'    => 'Ez szabja meg, mely mezők (repjegy/busz link és ár) jelennek meg lent.',
+        ),
         'tpa_celallomas' => array(
             'label'       => 'Célállomás',
             'type'        => 'text',
@@ -68,11 +80,20 @@ function tpa_get_fields() {
 
         // 💰 Ár és érvényesség
         'tpa_repjegy_ar' => array(
-            'label'       => 'Repjegy ár (Ft, oda-vissza)',
-            'type'        => 'number',
-            'section'     => 'ar',
-            'placeholder' => 'pl. 78900',
-            'desc'        => 'Csak szám, tagolás nélkül. A kezdőlapi ajánlat-kártyán külön sorban jelenik meg.',
+            'label'         => 'Repjegy ár (Ft, oda-vissza)',
+            'type'          => 'number',
+            'section'       => 'ar',
+            'placeholder'   => 'pl. 78900',
+            'desc'          => 'Csak szám, tagolás nélkül. A kezdőlapi ajánlat-kártyán külön sorban jelenik meg.',
+            'show_if_tipus' => array( 'repulo_szallas' ),
+        ),
+        'tpa_busz_ar' => array(
+            'label'         => 'Buszjegy ár (Ft, oda-vissza)',
+            'type'          => 'number',
+            'section'       => 'ar',
+            'placeholder'   => 'pl. 24900',
+            'desc'          => 'Csak szám, tagolás nélkül. A kezdőlapi ajánlat-kártyán külön sorban jelenik meg.',
+            'show_if_tipus' => array( 'busz_szallas' ),
         ),
         'tpa_szallas_ar' => array(
             'label'       => 'Szállás ár (Ft, teljes tartózkodásra)',
@@ -104,11 +125,20 @@ function tpa_get_fields() {
 
         // 🔗 Affiliate linkek
         'tpa_kiwi_link' => array(
-            'label'       => 'Kiwi.com deep link',
-            'type'        => 'url',
-            'section'     => 'linkek',
-            'placeholder' => 'https://c111.travelpayouts.com/click?shmarker=...',
-            'desc'        => 'A Travelpayouts-ba csomagolt követő link (NEM a sima kiwi.com link!).',
+            'label'         => 'Kiwi.com deep link',
+            'type'          => 'url',
+            'section'       => 'linkek',
+            'placeholder'   => 'https://c111.travelpayouts.com/click?shmarker=...',
+            'desc'          => 'A Travelpayouts-ba csomagolt követő link (NEM a sima kiwi.com link!).',
+            'show_if_tipus' => array( 'repulo_szallas' ),
+        ),
+        'tpa_busz_link' => array(
+            'label'         => 'Flixbus / busz link',
+            'type'          => 'url',
+            'section'       => 'linkek',
+            'placeholder'   => 'https://www.flixbus.hu/...',
+            'desc'          => 'A busztársaság (pl. Flixbus) affiliate vagy közvetlen linkje.',
+            'show_if_tipus' => array( 'busz_szallas' ),
         ),
         'tpa_szallas_link' => array(
             'label'       => 'Szállás affiliate link',

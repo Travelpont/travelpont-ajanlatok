@@ -1,9 +1,19 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.2.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.9.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
 > (minta: `E:\aktivbalaton.hu\Saját pluginok\_AKTIV\balaton-szallasok`)
 > SZABÁLY: minden módosításkor verziót emelünk a fő fájl fejlécében
 > (cache-buster + követhetőség).
+>
+> **1.9.0**: az ajánlat többé nincs kizárólag repülő+szállás kombóra
+> kihegyezve. Új `tpa_ajanlat_tipus` select mező ("Utazás adatai" doboz,
+> opciók: `repulo_szallas` / `busz_szallas` / `csak_szallas`) az admin
+> űrlapon és a Portálon vezérli, mely mezők látszanak (JS-es
+> `show_if_tipus` mechanizmus, ld. `fields.php` + `assets/js/admin-tipus-toggle.js`).
+> Új `tpa_busz_link` és `tpa_busz_ar` mező (Flixbus/busz kombóhoz), a
+> meglévő `tpa_kiwi_link`/`tpa_repjegy_ar` mostantól csak `repulo_szallas`
+> típusnál látszik. A meglévő ajánlatok változatlanul működnek (implicit
+> alapérték: `repulo_szallas`), migráció nem szükséges.
 >
 > **1.2.0**: új `tpa_repjegy_ar` és `tpa_szallas_ar` mező ("Ár és
 > érvényesség" doboz) – külön repjegy/szállás ár, amit a kezdőlap
@@ -19,9 +29,11 @@
 
 ## Mit tud?
 
-- **"Ajánlatok" menüpont** a WP adminban → repjegy+szállás kombók felvitele
-  űrlapon (nem kell kódolni): célállomás, indulás, időpont, éjszakák, ár,
-  érvényességi dátum, Kiwi.com deep link, szállás affiliate link.
+- **"Ajánlatok" menüpont** a WP adminban → repülő+szállás, busz (Flixbus)+
+  szállás vagy csak szállás (egyéni utazás) ajánlatok felvitele űrlapon (nem
+  kell kódolni): célállomás, indulás, időpont, éjszakák, ár, érvényességi
+  dátum, Kiwi.com deep link / busz link, szállás affiliate link. Az "Ajánlat
+  típusa" mező szabja meg, mely mezők látszanak.
 - **`[travelpont_ajanlatok]` shortcode** → reszponzív kártyarács bárhová
   (Elementor Shortcode widget VAGY Gutenberg Shortcode blokk – téma-független).
 - **Ajánlat aloldal** → minden ajánlatnak saját oldala van (kártya "Megnézem"

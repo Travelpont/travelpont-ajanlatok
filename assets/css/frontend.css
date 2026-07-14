@@ -406,11 +406,13 @@
     font-size: 1rem;
 }
 
-.tpa-gomb-repjegy {
+.tpa-gomb-repjegy,
+.tpa-gomb-busz {
     background: var(--tpa-primary);
 }
 
-.tpa-gomb-repjegy:hover {
+.tpa-gomb-repjegy:hover,
+.tpa-gomb-busz:hover {
     background: var(--tpa-primary-dark);
 }
 

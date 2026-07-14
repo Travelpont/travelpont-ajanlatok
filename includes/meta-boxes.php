@@ -52,7 +52,10 @@ function tpa_render_field( $post_id, $key, $field ) {
         $value = $field['default'];
     }
 
-    echo '<div class="tpa-field tpa-field-' . esc_attr( $type ) . '">';
+    $show_if_tipus = isset( $field['show_if_tipus'] ) ? implode( ',', $field['show_if_tipus'] ) : '';
+
+    echo '<div class="tpa-field tpa-field-' . esc_attr( $type ) . '"' .
+        ( $show_if_tipus ? ' data-tpa-show-if-tipus="' . esc_attr( $show_if_tipus ) . '"' : '' ) . '>';
     echo '<label for="' . esc_attr( $key ) . '"><strong>' . esc_html( $field['label'] ) . '</strong></label>';
 
     switch ( $type ) {

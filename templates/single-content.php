@@ -15,6 +15,7 @@ $ar            = tpa_teljes_ar( $post_id );
 $ar_megjegyzes = tpa_mezo( $post_id, 'tpa_ar_megjegyzes' );
 $ervenyes      = tpa_mezo( $post_id, 'tpa_ervenyes' );
 $kiwi_link     = tpa_mezo( $post_id, 'tpa_kiwi_link' );
+$busz_link     = tpa_mezo( $post_id, 'tpa_busz_link' );
 $szallas_link  = tpa_mezo( $post_id, 'tpa_szallas_link' );
 $platform_nev  = tpa_szallas_platform_nev( $post_id );
 $lejart        = tpa_lejart( $post_id );
@@ -74,12 +75,18 @@ $lejart        = tpa_lejart( $post_id );
         </div>
     <?php endif; ?>
 
-    <?php if ( ! $lejart && ( $kiwi_link || $szallas_link ) ) : ?>
+    <?php if ( ! $lejart && ( $kiwi_link || $busz_link || $szallas_link ) ) : ?>
         <div class="tpa-single-gombok">
             <?php if ( $kiwi_link ) : ?>
                 <a class="tpa-gomb tpa-gomb-repjegy" href="<?php echo esc_url( $kiwi_link ); ?>"
                    target="_blank" rel="nofollow sponsored noopener">
                     ✈️ Repülőjegy megnézése
+                </a>
+            <?php endif; ?>
+            <?php if ( $busz_link ) : ?>
+                <a class="tpa-gomb tpa-gomb-busz" href="<?php echo esc_url( $busz_link ); ?>"
+                   target="_blank" rel="nofollow sponsored noopener">
+                    🚌 Buszjegy megnézése
                 </a>
             <?php endif; ?>
             <?php if ( $szallas_link ) : ?>

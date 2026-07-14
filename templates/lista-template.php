@@ -23,5 +23,5 @@ $min_szelesseg = array( 2 => '340px', 3 => '270px', 4 => '220px' );
         ?>
     </div>
 <?php else : ?>
-    <p class="tpa-empty"><?php echo esc_html( apply_filters( 'tpa_ures_lista_szoveg', 'Jelenleg nincs aktív ajánlat – nézz vissza hamarosan! ✈️' ) ); ?></p>
+    <p class="tpa-empty"><?php echo esc_html( apply_filters( 'tpa_ures_lista_szoveg', 'Jelenleg nincs aktív ajánlat – nézz vissza hamarosan! 🧳' ) ); ?></p>
 <?php endif; ?>
