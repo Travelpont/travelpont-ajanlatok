@@ -91,6 +91,10 @@ function tpa_render_field( $post_id, $key, $field ) {
                 'show_option_none'  => '— nincs kiválasztva —',
                 'option_none_value' => '',
                 'sort_column'       => 'menu_order,post_title',
+                // A get_pages() alapból CSAK publish – így a még vázlat állapotú
+                // (pl. frissen felvitt) úticélok is választhatók legyenek, egyezően
+                // a Portál /meta végpontjával.
+                'post_status'       => 'publish,draft',
             ) );
             break;
 

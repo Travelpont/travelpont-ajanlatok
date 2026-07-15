@@ -212,6 +212,53 @@ function tpa_teljes_ar( $post_id ) {
     return (string) ( (float) $repjegy + (float) $szallas );
 }
 
+// ── Összekötött úticél "morzsamenüje": Ország › Régió › Város ──────────────────
+// A tpa_uticel mezőben tárolt úticél-ID ős-lánca + saját címe. Ugyanaz a minta,
+// mint a REST /meta végponton (rest-api.php, tpa_api_meta()).
+//   $args['linkelt'] = true → biztonságos HTML <a href> elemekből épül (aloldali
+//     morzsamenühöz) – közvetlenül echózható.
+//   különben NYERS szöveg, egymást › jellel elválasztva (a hívó felel az
+//     escape-elésért, pl. esc_html; így REST/JSON-ban sincs dupla escape).
+//   $args['elvalaszto'] felülírható (alapból ' › ').
+function tpa_uticel_breadcrumb( $uticel_id, $args = array() ) {
+    $uticel_id = absint( $uticel_id );
+    if ( ! $uticel_id ) return '';
+
+    $post = get_post( $uticel_id );
+    if ( ! $post || $post->post_type !== 'uticel' ) return '';
+
+    $linkelt    = ! empty( $args['linkelt'] );
+    $elvalaszto = isset( $args['elvalaszto'] ) ? $args['elvalaszto'] : ' › ';
+
+    $idk = array_reverse( get_post_ancestors( $uticel_id ) ); // ős-lánc: legfelső → közvetlen szülő
+    $idk[] = $uticel_id;                                        // majd maga az úticél
+
+    $reszek = array();
+    foreach ( $idk as $id ) {
+        $cim = get_the_title( $id );
+        if ( $cim === '' ) continue;
+        if ( $linkelt ) {
+            $reszek[] = '<a href="' . esc_url( get_permalink( $id ) ) . '">' . esc_html( $cim ) . '</a>';
+        } else {
+            $reszek[] = $cim; // nyers – a hívó escapel
+        }
+    }
+
+    return implode( $linkelt ? '<span class="tpa-morzsa-sep">' . esc_html( $elvalaszto ) . '</span>' : $elvalaszto, $reszek );
+}
+
+// ── Az ajánlat "hol" megjelenítése (kártya, kezdőlap-modul, REST) ──────────────
+// Prioritás: a kézzel írt tpa_celallomas felülír; ha üres, az összekötött úticél
+// morzsamenüje (nyers breadcrumb-string). Így a meglévő, kézi célállomású
+// ajánlatok változatlanok, az új workflow-ban viszont elég az úticélt bekötni.
+// NYERS szöveget ad vissza – a hívó felel az escape-elésért (esc_html).
+function tpa_hely_megjelenites( $post_id ) {
+    $celallomas = tpa_mezo( $post_id, 'tpa_celallomas' );
+    if ( $celallomas !== '' ) return $celallomas;
+
+    return tpa_uticel_breadcrumb( tpa_mezo( $post_id, 'tpa_uticel' ) );
+}
+
 // ── Lejárt-e az ajánlat? ──────────────────────────────────────────────────────
 function tpa_lejart( $post_id ) {
     $ervenyes = tpa_mezo( $post_id, 'tpa_ervenyes' );

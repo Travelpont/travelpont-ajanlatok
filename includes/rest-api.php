@@ -140,8 +140,9 @@ function tpa_api_format( $post_id ) {
     $post = get_post( $post_id );
     if ( ! $post || $post->post_type !== 'ajanlat' ) return array();
 
-    $uticel_id    = tpa_mezo( $post_id, 'tpa_uticel' );
-    $uticel_title = $uticel_id ? get_the_title( (int) $uticel_id ) : '';
+    $uticel_id        = tpa_mezo( $post_id, 'tpa_uticel' );
+    $uticel_title     = $uticel_id ? get_the_title( (int) $uticel_id ) : '';
+    $uticel_breadcrumb = tpa_uticel_breadcrumb( $uticel_id ); // "Ország › Régió › Város" (sima szöveg)
 
     $kategoria_terms = wp_get_post_terms( $post_id, 'ajanlat_kategoria' );
     $kategoriak      = is_wp_error( $kategoria_terms ) ? array() : wp_list_pluck( $kategoria_terms, 'name' );
@@ -160,7 +161,8 @@ function tpa_api_format( $post_id ) {
         'slug'            => $post->post_name,
         'status'          => $post->post_status,
         'content'         => $post->post_content,
-        'uticel_title'    => $uticel_title,
+        'uticel_title'      => $uticel_title,
+        'uticel_breadcrumb' => $uticel_breadcrumb,
         'ar_szamitott'    => $ar_szamitott,
         'ar_format'       => $ar_szamitott !== '' ? tpa_ar_format( $ar_szamitott ) : '',
         'lejart'          => tpa_lejart( $post_id ),

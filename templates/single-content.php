@@ -21,6 +21,7 @@ $busz_link     = tpa_mezo( $post_id, 'tpa_busz_link' );
 $szallas_link  = tpa_mezo( $post_id, 'tpa_szallas_link' );
 $platform_nev  = tpa_szallas_platform_nev( $post_id );
 $lejart        = tpa_lejart( $post_id );
+$morzsa        = tpa_uticel_breadcrumb( tpa_mezo( $post_id, 'tpa_uticel' ), array( 'linkelt' => true ) );
 ?>
 <div class="tpa-single-doboz">
 
@@ -32,6 +33,10 @@ $lejart        = tpa_lejart( $post_id );
         <div class="tpa-single-hero">
             <?php echo get_the_post_thumbnail( $post_id, 'large' ); ?>
         </div>
+    <?php endif; ?>
+
+    <?php if ( $morzsa !== '' ) : ?>
+        <nav class="tpa-single-morzsa" aria-label="Úticél útvonal"><?php echo $morzsa; // linkelt, escapelt (tpa_uticel_breadcrumb) ?></nav>
     <?php endif; ?>
 
     <ul class="tpa-single-info">

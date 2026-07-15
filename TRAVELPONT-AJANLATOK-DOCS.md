@@ -1,9 +1,23 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.9.1 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.10.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
 > (minta: `E:\aktivbalaton.hu\Saját pluginok\_AKTIV\balaton-szallasok`)
 > SZABÁLY: minden módosításkor verziót emelünk a fő fájl fejlécében
 > (cache-buster + követhetőség).
+>
+> **1.10.0**: az Ajánlat ↔ Úticél kapcsolat kétirányúvá vált a
+> megjelenítésben. (1) A `tpa_uticel` legördülő a WP adminban mostantól a
+> DRAFT úticélokat is mutatja (`meta-boxes.php`, `wp_dropdown_pages` →
+> `post_status: publish,draft`), egyezően a Portál /meta végpontjával – így
+> a frissen felvitt (még vázlat) városok is kiválaszthatók. (2) Új
+> `tpa_uticel_breadcrumb()` és `tpa_hely_megjelenites()` helper
+> (`fields.php`): az ajánlat kártyáján és aloldalán a hely mostantól az
+> összekötött úticél teljes útvonalaként (Ország › Régió › Város) jelenhet
+> meg. Prioritás: a kézzel írt `tpa_celallomas` felülír; ha üres és van
+> úticél összekötve, a breadcrumb jelenik meg. Az aloldalon linkelt
+> morzsamenü (a hierarchia böngészhető), a REST `tpa_api_format()` új
+> `uticel_breadcrumb` mezőt ad. Visszafelé kompatibilis: kézi célállomású
+> ajánlatok változatlanok.
 >
 > **1.9.1**: aloldali dizájn-frissítés (első "csak szállás" ajánlat éles
 > visszajelzése alapján) – a kiemelt kép mostantól megjelenik az aloldal

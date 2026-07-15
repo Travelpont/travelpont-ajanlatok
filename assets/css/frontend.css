@@ -145,6 +145,21 @@
     gap: .4rem;
 }
 
+/* A hely-sor (📍) hosszabb morzsamenüt is tartalmazhat – engedjük tördelni,
+   az ikon a szöveg tetejéhez igazodjon. */
+.tpa-card-hely {
+    align-items: flex-start !important;
+}
+
+.tpa-card-hely .tpa-icon {
+    margin-top: .12em;
+}
+
+.tpa-card-hely span {
+    min-width: 0;
+    word-break: break-word;
+}
+
 /* ── Ikonok (info-sorok, chip-ek) ───────────────────────────────────────── */
 .tpa-icon {
     width: 1.05em;
@@ -242,6 +257,30 @@
     .tpa-single-hero {
         aspect-ratio: 16 / 10;
     }
+}
+
+/* ── Morzsamenü (összekötött úticél útvonala, linkelt) ───────────────────── */
+.tpa-single-morzsa {
+    font-size: .85rem;
+    line-height: 1.5;
+    color: var(--tpa-text-light);
+    margin: 0 0 1.1rem;
+}
+
+.tpa-single-morzsa a {
+    color: var(--tpa-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.tpa-single-morzsa a:hover {
+    text-decoration: underline;
+}
+
+.tpa-single-morzsa .tpa-morzsa-sep {
+    color: var(--tpa-text-light);
+    font-weight: 400;
+    margin: 0 .1rem;
 }
 
 /* ── Infó-sor (chip-ek) ──────────────────────────────────────────────────── */

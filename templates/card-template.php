@@ -7,7 +7,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 $post_id       = get_the_ID();
-$celallomas    = tpa_mezo( $post_id, 'tpa_celallomas' );
+$hely          = tpa_hely_megjelenites( $post_id ); // kézi célállomás VAGY úticél-morzsamenü (nyers)
 $indulas       = tpa_mezo( $post_id, 'tpa_indulas' );
 $idopont       = tpa_mezo( $post_id, 'tpa_idopont' );
 $ejszakak      = tpa_mezo( $post_id, 'tpa_ejszakak' );
@@ -44,8 +44,8 @@ $elso_kategoria = ( $kategoriak && ! is_wp_error( $kategoriak ) ) ? current( $ka
         </h3>
 
         <ul class="tpa-card-info">
-            <?php if ( $celallomas ) : ?>
-                <li><?php echo tpa_icon( 'pin' ); ?><?php echo esc_html( $celallomas ); ?></li>
+            <?php if ( $hely !== '' ) : ?>
+                <li class="tpa-card-hely"><?php echo tpa_icon( 'pin' ); ?><span><?php echo esc_html( $hely ); ?></span></li>
             <?php endif; ?>
             <?php if ( $idopont ) : ?>
                 <li><?php echo tpa_icon( 'calendar' ); ?><?php echo esc_html( $idopont ); ?></li>
