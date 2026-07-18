@@ -12,6 +12,58 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+// ── Schema.org strukturált adat (JSON-LD) az ajánlat-aloldalakra ──────────────
+// TouristTrip + beágyazott Offer: a Google így árat, pénznemet és érvényességi
+// dátumot is társíthat a találathoz. A Yoast az Article/WebPage sémát adja,
+// ez azt egészíti ki az utazás-specifikus résszel.
+add_action( 'wp_head', function() {
+    if ( ! is_singular( 'ajanlat' ) ) return;
+
+    $post_id = get_queried_object_id();
+    if ( ! $post_id ) return;
+
+    $adat = array(
+        '@context' => 'https://schema.org',
+        '@type'    => 'TouristTrip',
+        'name'     => get_the_title( $post_id ),
+        'url'      => get_permalink( $post_id ),
+        'provider' => array(
+            '@type' => 'Organization',
+            'name'  => 'Travelpont',
+            'url'   => home_url( '/' ),
+        ),
+    );
+
+    $kivonat = has_excerpt( $post_id )
+        ? get_the_excerpt( $post_id )
+        : wp_trim_words( wp_strip_all_tags( get_post_field( 'post_content', $post_id ) ), 40, '…' );
+    if ( $kivonat ) $adat['description'] = $kivonat;
+
+    $kep = get_the_post_thumbnail_url( $post_id, 'large' );
+    if ( $kep ) $adat['image'] = $kep;
+
+    $ar = tpa_teljes_ar( $post_id );
+    if ( $ar !== '' ) {
+        $offer = array(
+            '@type'         => 'Offer',
+            'price'         => (string) $ar,
+            'priceCurrency' => 'HUF',
+            'url'           => get_permalink( $post_id ),
+            'availability'  => tpa_lejart( $post_id ) ? 'https://schema.org/Discontinued' : 'https://schema.org/InStock',
+        );
+        $ervenyes = tpa_mezo( $post_id, 'tpa_ervenyes' );
+        if ( $ervenyes ) {
+            $offer['validThrough']    = $ervenyes;
+            $offer['priceValidUntil'] = $ervenyes;
+        }
+        $adat['offers'] = $offer;
+    }
+
+    echo '<script type="application/ld+json">'
+        . wp_json_encode( $adat, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES )
+        . '</script>' . "\n";
+} );
+
 add_filter( 'the_content', function( $content ) {
     if ( ! is_singular( 'ajanlat' ) || ! in_the_loop() || ! is_main_query() ) {
         return $content;

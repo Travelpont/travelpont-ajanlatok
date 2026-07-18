@@ -68,12 +68,7 @@ function tpa_ajanlatok_shortcode( $atts ) {
 
     // Lejárt ajánlatok kiszűrése (alapértelmezés)
     if ( $atts['lejartak'] !== 'igen' ) {
-        $args['meta_query'][] = array(
-            'relation' => 'OR',
-            array( 'key' => 'tpa_ervenyes', 'value' => current_time( 'Y-m-d' ), 'compare' => '>=', 'type' => 'DATE' ),
-            array( 'key' => 'tpa_ervenyes', 'compare' => 'NOT EXISTS' ),
-            array( 'key' => 'tpa_ervenyes', 'value' => '', 'compare' => '=' ),
-        );
+        $args['meta_query'][] = tpa_nem_lejart_meta_query();
     }
 
     // Bővítési pont: a lekérdezés kívülről is módosítható

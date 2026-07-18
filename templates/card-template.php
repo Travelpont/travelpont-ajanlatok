@@ -11,6 +11,7 @@ $hely          = tpa_hely_megjelenites( $post_id ); // kézi célállomás VAGY 
 $indulas       = tpa_mezo( $post_id, 'tpa_indulas' );
 $idopont       = tpa_idopont_megjelenites( $post_id );  // dátumokból képzett tartomány vagy kézi szöveg
 $ejszakak      = tpa_ejszakak_szam( $post_id );         // dátumokból számolva vagy kézi érték
+$utvonal       = tpa_utvonal( $post_id );               // repülős útvonal (BUD → PVK) vagy null
 $szallas_nev   = tpa_mezo( $post_id, 'tpa_szallas_nev' );
 $csillagok     = tpa_szallas_csillag_html( $post_id );
 $ellatas       = tpa_ellatas_nev( $post_id );
@@ -54,9 +55,17 @@ $elso_kategoria = ( $kategoriak && ! is_wp_error( $kategoriak ) ) ? current( $ka
                 <li><?php echo tpa_icon( 'calendar' ); ?><?php echo esc_html( $idopont ); ?></li>
             <?php endif; ?>
             <?php if ( $ejszakak !== '' ) : ?>
-                <li><?php echo tpa_icon( 'moon' ); ?><?php echo esc_html( $ejszakak ); ?> éjszaka<?php echo $indulas ? ' · ' . esc_html( $indulas ) . ' indulással' : ''; ?></li>
-            <?php elseif ( $indulas ) : ?>
+                <li><?php echo tpa_icon( 'moon' ); ?><?php echo esc_html( $ejszakak ); ?> éjszaka<?php echo ( ! $utvonal && $indulas ) ? ' · ' . esc_html( $indulas ) . ' indulással' : ''; ?></li>
+            <?php elseif ( ! $utvonal && $indulas ) : ?>
                 <li><?php echo tpa_icon( 'send' ); ?>Indulás: <?php echo esc_html( $indulas ); ?></li>
+            <?php endif; ?>
+            <?php if ( $utvonal ) : ?>
+                <li class="tpa-card-utvonal"><?php echo tpa_icon( 'send' ); ?><span>
+                    <strong class="tpa-utvonal-kod"><?php echo esc_html( $utvonal['kod'] ); ?></strong>
+                    <?php if ( $utvonal['varos'] !== '' ) : ?>
+                        <span class="tpa-utvonal-varos"><?php echo esc_html( $utvonal['varos'] ); ?></span>
+                    <?php endif; ?>
+                </span></li>
             <?php endif; ?>
             <?php if ( $szallas_nev !== '' || $ellatas !== '' ) : ?>
                 <li class="tpa-card-szallas"><?php echo tpa_icon( 'hotel' ); ?><span>

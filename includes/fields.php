@@ -52,11 +52,34 @@ function tpa_get_fields() {
             'desc'        => 'A kártyán megjelenő úti cél neve.',
         ),
         'tpa_indulas' => array(
-            'label'       => 'Indulás helye',
+            'label'       => 'Indulás helye (város)',
             'type'        => 'text',
             'section'     => 'utazas',
             'placeholder' => 'pl. Budapest',
-            'desc'        => 'Honnan indul a járat (opcionális).',
+            'desc'        => 'Honnan indul az utazás – VÁROSNÉV, ne reptérkód. Repülős ajánlatnál a Portál a reptér kiválasztásakor automatikusan kitölti.',
+        ),
+        'tpa_indulas_iata' => array(
+            'label'         => 'Indulási reptér (IATA-kód)',
+            'type'          => 'text',
+            'section'       => 'utazas',
+            'placeholder'   => 'pl. BUD',
+            'desc'          => 'A kártyán az útvonal reptérkódokkal jelenik meg (BUD → PVK), alatta kisbetűvel a városok. A Portálon legördülőből választható.',
+            'show_if_tipus' => array( 'repulo_szallas' ),
+        ),
+        'tpa_cel_iata' => array(
+            'label'         => 'Érkezési reptér (IATA-kód)',
+            'type'          => 'text',
+            'section'       => 'utazas',
+            'placeholder'   => 'pl. PVK',
+            'show_if_tipus' => array( 'repulo_szallas' ),
+        ),
+        'tpa_cel_varos' => array(
+            'label'         => 'Érkezési reptér városa',
+            'type'          => 'text',
+            'section'       => 'utazas',
+            'placeholder'   => 'pl. Preveza (Lefkada)',
+            'desc'          => 'A Portál a reptér kiválasztásakor automatikusan kitölti.',
+            'show_if_tipus' => array( 'repulo_szallas' ),
         ),
         'tpa_indulas_datum' => array(
             'label'   => 'Odaút / érkezés dátuma',
@@ -90,6 +113,13 @@ function tpa_get_fields() {
             'section'   => 'utazas',
             'post_type' => 'uticel',
             'desc'      => 'Melyik Úticél oldalhoz (ország / tájegység / város) tartozzon ez az ajánlat? Az ajánlat automatikusan megjelenik a kiválasztott Úticél oldalán.',
+        ),
+        'tpa_miert_szuper' => array(
+            'label'       => 'Miért szuper ez az ajánlat? (soronként egy pont)',
+            'type'        => 'textarea',
+            'section'     => 'utazas',
+            'placeholder' => "közvetlen járat Budapestről\na strand 200 méterre\nszeptemberben még 26 fok",
+            'desc'        => '2-4 rövid, személyes érv – az aloldalon pipás listaként jelenik meg. Ez a Travelpont hangja: miért pont ezt vadásztuk le neked.',
         ),
 
         // 🏨 Szállás adatai
@@ -166,6 +196,19 @@ function tpa_get_fields() {
             'section'     => 'ar',
             'placeholder' => 'üresen: típus szerinti alapszöveg (pl. „2 fő, repülőjeggyel együtt”)',
             'desc'        => 'Az ár alatt megjelenő apróbetűs szöveg. Üresen hagyva az ajánlat típusához illő alapszöveget írjuk ki (2 fős csomagár-értelmezés).',
+        ),
+        'tpa_poggyasz' => array(
+            'label'         => 'Poggyász az árban',
+            'type'          => 'select',
+            'section'       => 'ar',
+            'options'       => array(
+                ''            => '— nincs megadva —',
+                'kis_kezi'    => 'Kis kézipoggyász (ülés alá férő)',
+                'kezi'        => 'Kézipoggyász (fedélzeti táska/trolley)',
+                'feladott'    => 'Kézipoggyász + feladott bőrönd',
+            ),
+            'desc'          => 'Mit tartalmaz a repjegy ára poggyászból. A fapados árak jellemzően csak kis kézipoggyászt tartalmaznak – ezt őszintén jelezzük a vendégnek.',
+            'show_if_tipus' => array( 'repulo_szallas' ),
         ),
         'tpa_ervenyes' => array(
             'label'       => 'Ajánlat érvényes eddig',
@@ -342,15 +385,73 @@ function tpa_ar_megjegyzes_megjelenites( $post_id ) {
 }
 
 // ── "Mit tartalmaz az ár" tájékoztató sor (típus szerint, filterrel átírható) ─
+// Repülősnél a poggyász-mező is beleszól: ha a feladott bőrönd benne van az
+// árban, nem állítjuk az ellenkezőjét.
 function tpa_ar_tartalom_szoveg( $post_id ) {
     $tipus = tpa_mezo( $post_id, 'tpa_ajanlat_tipus' );
-    $alap  = array(
-        'repulo_szallas' => 'Az ár a repülőjegyet és a szállást tartalmazza – feladott poggyászt és reptéri transzfert nem.',
-        'busz_szallas'   => 'Az ár a buszjegyet és a szállást tartalmazza.',
-        'csak_szallas'   => 'Az ár a szállást tartalmazza – az odautazás egyénileg szervezendő.',
-    );
-    $szoveg = isset( $alap[ $tipus ] ) ? $alap[ $tipus ] : '';
+
+    if ( $tipus === 'busz_szallas' ) {
+        $szoveg = 'Az ár a buszjegyet és a szállást tartalmazza.';
+    } elseif ( $tipus === 'csak_szallas' ) {
+        $szoveg = 'Az ár a szállást tartalmazza – az odautazás egyénileg szervezendő.';
+    } else {
+        $szoveg = ( tpa_mezo( $post_id, 'tpa_poggyasz' ) === 'feladott' )
+            ? 'Az ár a repülőjegyet és a szállást tartalmazza – reptéri transzfert nem.'
+            : 'Az ár a repülőjegyet és a szállást tartalmazza – feladott poggyászt és reptéri transzfert nem.';
+    }
+
     return apply_filters( 'tpa_ar_tartalom_szoveg', $szoveg, $post_id, $tipus );
+}
+
+// ── Poggyász megnevezése (a select-opció felirata) ────────────────────────────
+function tpa_poggyasz_nev( $post_id ) {
+    $ertek = tpa_mezo( $post_id, 'tpa_poggyasz' );
+    if ( $ertek === '' ) return '';
+    $fields  = tpa_get_fields();
+    $options = isset( $fields['tpa_poggyasz']['options'] ) ? $fields['tpa_poggyasz']['options'] : array();
+    return isset( $options[ $ertek ] ) ? $options[ $ertek ] : '';
+}
+
+// ── "Miért szuper?" pontok: a textarea sorai tömbként (üres sorok kiszűrve) ───
+function tpa_miert_szuper_pontok( $post_id ) {
+    $nyers = tpa_mezo( $post_id, 'tpa_miert_szuper' );
+    if ( $nyers === '' ) return array();
+    $sorok = array_map( 'trim', preg_split( '/\r\n|\r|\n/', $nyers ) );
+    return array_values( array_filter( $sorok, 'strlen' ) );
+}
+
+// ── Közös meta_query: a le nem járt ajánlatok szűrője ─────────────────────────
+// (a shortcode-lista és az aloldali "hasonló ajánlatok" is ezt használja)
+function tpa_nem_lejart_meta_query() {
+    return array(
+        'relation' => 'OR',
+        array( 'key' => 'tpa_ervenyes', 'value' => current_time( 'Y-m-d' ), 'compare' => '>=', 'type' => 'DATE' ),
+        array( 'key' => 'tpa_ervenyes', 'compare' => 'NOT EXISTS' ),
+        array( 'key' => 'tpa_ervenyes', 'value' => '', 'compare' => '=' ),
+    );
+}
+
+// ── Repülős útvonal: reptérkódok + városok ────────────────────────────────────
+// null, ha nincs mindkét IATA-kód kitöltve. Különben:
+//   array( 'kod' => 'BUD → PVK', 'varos' => 'Budapest → Preveza (Lefkada)' )
+// (a 'varos' üres string is lehet, ha a városnevek nincsenek kitöltve)
+function tpa_utvonal( $post_id ) {
+    $indulas_iata = strtoupper( trim( tpa_mezo( $post_id, 'tpa_indulas_iata' ) ) );
+    $cel_iata     = strtoupper( trim( tpa_mezo( $post_id, 'tpa_cel_iata' ) ) );
+    if ( $indulas_iata === '' || $cel_iata === '' ) return null;
+
+    $indulas_varos = tpa_mezo( $post_id, 'tpa_indulas' );
+    $cel_varos     = tpa_mezo( $post_id, 'tpa_cel_varos' );
+    if ( $indulas_varos !== '' && $cel_varos !== '' ) {
+        $varos = $indulas_varos . ' → ' . $cel_varos;
+    } else {
+        $varos = $indulas_varos !== '' ? $indulas_varos : $cel_varos;
+    }
+
+    return array(
+        'kod'   => $indulas_iata . ' → ' . $cel_iata,
+        'varos' => $varos,
+    );
 }
 
 // ── Szállás-csillagok HTML-je: "★★★★" (biztonságosan echózható) ──────────────

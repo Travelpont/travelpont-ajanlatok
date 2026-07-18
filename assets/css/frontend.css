@@ -173,6 +173,34 @@
     white-space: nowrap;
 }
 
+/* Repülős útvonal (BUD → PVK, alatta kisbetűvel a városok) */
+.tpa-card-utvonal {
+    align-items: flex-start !important;
+}
+
+.tpa-card-utvonal .tpa-icon {
+    margin-top: .12em;
+}
+
+.tpa-card-utvonal > span {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .05rem;
+}
+
+.tpa-utvonal-kod {
+    color: var(--tpa-text);
+    letter-spacing: .03em;
+}
+
+.tpa-utvonal-varos {
+    display: block;
+    font-size: .78rem;
+    color: var(--tpa-text-light);
+    line-height: 1.35;
+}
+
 .tpa-card-hely .tpa-icon {
     margin-top: .12em;
 }
@@ -333,6 +361,66 @@
 .tpa-info-ertek {
     font-weight: 600;
     color: var(--tpa-text);
+}
+
+/* Útvonal-chip: kétsoros tartalom (kód + város), ezért enyhébb lekerekítés */
+.tpa-chip-utvonal {
+    border-radius: 14px !important;
+    align-items: flex-start !important;
+}
+
+.tpa-chip-utvonal .tpa-icon,
+.tpa-chip-utvonal .tpa-info-cimke {
+    margin-top: .1em;
+}
+
+.tpa-utvonal-blokk {
+    display: flex;
+    flex-direction: column;
+    gap: .05rem;
+    min-width: 0;
+}
+
+/* ── "Miért szuper ez az ajánlat?" – Petra személyes érvei ───────────────── */
+.tpa-miert-szuper {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 12px;
+    padding: 1rem 1.25rem 1.1rem;
+    margin: 0 0 1.25rem;
+}
+
+.tpa-miert-szuper-cim {
+    margin: 0 0 .55rem;
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--tpa-accent-dark);
+}
+
+.tpa-miert-szuper ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+
+.tpa-miert-szuper li {
+    display: flex;
+    align-items: flex-start;
+    gap: .5rem;
+    margin: 0;
+    font-size: .95rem;
+    line-height: 1.45;
+    color: var(--tpa-text);
+}
+
+.tpa-miert-pipa {
+    color: #16a34a;
+    margin-top: .18em;
 }
 
 /* ── Kiemelt ár + CTA panel ──────────────────────────────────────────────── */
@@ -561,11 +649,152 @@
     background: var(--tpa-primary-dark);
 }
 
+/* Számozott foglalási lépések (két gombnál: 1. lépés repjegy/busz, 2. szállás) */
+.tpa-gombok-lepesek .tpa-gomb {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .1rem;
+    line-height: 1.3;
+}
+
+.tpa-gomb-lepes {
+    display: block;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    opacity: .85;
+}
+
 .tpa-affiliate-kozzetetel {
     margin: 1rem 0 0;
     font-size: .8rem;
     color: var(--tpa-text-light);
     line-height: 1.5;
+}
+
+/* ── Megosztás-sor ("Küldd el az útitársadnak") ──────────────────────────── */
+.tpa-megosztas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+    margin: 0 0 1.5rem;
+}
+
+.tpa-megosztas-cimke {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--tpa-text-light);
+    margin-right: .25rem;
+}
+
+.tpa-megosztas-gomb {
+    display: inline-block;
+    background: #f1f5f9;
+    border: 1px solid var(--tpa-card-border);
+    border-radius: 999px;
+    padding: .35rem .85rem;
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--tpa-text) !important;
+    text-decoration: none !important;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s ease, border-color .15s ease;
+}
+
+.tpa-megosztas-gomb:hover {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+}
+
+/* ── Hasonló ajánlatok sáv az aloldal alján ──────────────────────────────── */
+.tpa-hasonlo {
+    margin: 1.5rem 0 .5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--tpa-card-border);
+}
+
+.tpa-hasonlo-cim {
+    margin: 0 0 1rem;
+    font-size: 1.2rem;
+}
+
+/* ── Úticél-ajánló doboz (az összekötött Úticél kedvcsinálója) ───────────── */
+.tpa-uticel-ajanlo {
+    display: flex;
+    gap: 1.25rem;
+    align-items: stretch;
+    background: #f8fafc;
+    border: 1px solid var(--tpa-card-border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0 0 .5rem;
+}
+
+.tpa-uticel-ajanlo-kep {
+    flex: 0 0 38%;
+    max-width: 320px;
+    display: block;
+}
+
+.tpa-uticel-ajanlo-kep img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    margin: 0;
+}
+
+.tpa-uticel-ajanlo-torzs {
+    padding: 1.1rem 1.25rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
+    align-items: flex-start;
+}
+
+.tpa-uticel-ajanlo-cimke {
+    margin: 0;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--tpa-primary);
+}
+
+.tpa-uticel-ajanlo-cim {
+    margin: 0;
+    font-size: 1.2rem;
+    line-height: 1.3;
+}
+
+.tpa-uticel-ajanlo-kivonat {
+    margin: 0;
+    font-size: .9rem;
+    color: var(--tpa-text-light);
+    line-height: 1.55;
+}
+
+.tpa-uticel-ajanlo .tpa-gomb {
+    margin-top: .35rem;
+}
+
+@media (max-width: 600px) {
+    .tpa-uticel-ajanlo {
+        flex-direction: column;
+    }
+
+    .tpa-uticel-ajanlo-kep {
+        flex: none;
+        max-width: none;
+        aspect-ratio: 16 / 9;
+    }
 }
 
 /* ── Mobil finomítások ──────────────────────────────────────────────────── */

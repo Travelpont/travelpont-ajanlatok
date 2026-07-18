@@ -1,9 +1,45 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.11.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.13.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
 > (minta: `E:\aktivbalaton.hu\Saját pluginok\_AKTIV\balaton-szallasok`)
 > SZABÁLY: minden módosításkor verziót emelünk a fő fájl fejlécében
 > (cache-buster + követhetőség).
+>
+> **1.13.0** – konverzió- és tartalom-csomag (a 2026-07-18-i ötletelés 6 pontja).
+> (1) **Számozott foglalási út**: két linkes ajánlatnál a gombok „1. lépés /
+> 2. lépés" felirattal lépésekké válnak (`.tpa-gombok-lepesek`,
+> `.tpa-gomb-lepes`); az affiliate-közzététel pontosítva: bármelyik link
+> külön is jutalékot hoz, de a kettő együtt a legjobb.
+> (2) **„Miért szuper ez az ajánlat?"**: új `tpa_miert_szuper` textarea
+> (soronként egy pont), az aloldalon pipás lista (`.tpa-miert-szuper`,
+> helper: `tpa_miert_szuper_pontok()`).
+> (3) **Poggyász-jelző**: új `tpa_poggyasz` select (kis kézi / kézi / +feladott,
+> csak repülősnél), chip az aloldalon; a `tpa_ar_tartalom_szoveg()`
+> poggyász-tudatos lett (nem állítja, hogy nincs feladott poggyász, ha van).
+> (4) **Megosztás-sor** (`.tpa-megosztas`): WhatsApp / Facebook / E-mail /
+> Link másolása (új `assets/js/megosztas.js`, single-ön enqueue-olva).
+> (5) **Hasonló ajánlatok sáv** (`.tpa-hasonlo`) az aloldal alján: 3 élő
+> ajánlat ugyanarra az úticélra (ha nincs, a legfrissebbek), a lejárt
+> ajánlat oldalán „nézd meg a frisseket" címmel – kártya-sablon
+> újrafelhasználásával. Közös helper: `tpa_nem_lejart_meta_query()`
+> (a shortcode is ezt használja).
+> (6) **Schema.org JSON-LD** (`single-display.php`, `wp_head`): TouristTrip +
+> Offer (ár HUF-ban, validThrough az érvényességi dátumból, lejártnál
+> Discontinued availability).
+>
+> **1.12.0** – repülős útvonal + úticél-ajánló.
+> (1) **Reptér-mezők** (csak `repulo_szallas` típusnál): `tpa_indulas_iata`,
+> `tpa_cel_iata`, `tpa_cel_varos`; a meglévő `tpa_indulas` label pontosítva
+> („város"). Új helper: `tpa_utvonal()` → `['kod' => 'BUD → PVK',
+> 'varos' => 'Budapest → Preveza (Lefkada)']` vagy null. Kártyán útvonal-sor
+> (`.tpa-card-utvonal`: kód félkövéren, alatta kisbetűs városok), aloldalon
+> „Repülő" chip (`.tpa-chip-utvonal`, kétsoros). A Portálon a repterek
+> kereshető legördülőből választhatók (bővített európai IATA-lista,
+> `iata-airports.js` a portal repóban), a kiválasztás a városmezőket és a
+> Kiwi-linkösszeállítót is kitölti.
+> (2) **Úticél-ajánló doboz** (`.tpa-uticel-ajanlo`) az aloldali doboz alján:
+> az összekötött Úticél kiemelt képe + címe + kivonata + „Útikalauz
+> megnyitása" gomb – belső linkelés, csak publikált úticélnál jelenik meg.
 >
 > **1.11.0** – „utazásiasítás": a 2026-07-18-i szakmai review nyomán.
 > (1) **Szállás-mezők**, új „🏨 Szállás adatai" szekció: `tpa_szallas_nev`
