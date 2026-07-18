@@ -1,9 +1,38 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.10.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.11.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
 > (minta: `E:\aktivbalaton.hu\Saját pluginok\_AKTIV\balaton-szallasok`)
 > SZABÁLY: minden módosításkor verziót emelünk a fő fájl fejlécében
 > (cache-buster + követhetőség).
+>
+> **1.11.0** – „utazásiasítás": a 2026-07-18-i szakmai review nyomán.
+> (1) **Szállás-mezők**, új „🏨 Szállás adatai" szekció: `tpa_szallas_nev`
+> (text), `tpa_szallas_csillag` (select 1–5), `tpa_szallas_ellatas` (select:
+> önellátás/reggeli/félpanzió/teljes panzió/all inclusive) – kártyán
+> szállás-sor, aloldalon Szállás+Ellátás chip. Helper: `tpa_szallas_csillag_html()`,
+> `tpa_ellatas_nev()`.
+> (2) **Strukturált dátumok**: `tpa_indulas_datum` + `tpa_hazaut_datum` (date).
+> A kiírt időpontot (`tpa_idopont_megjelenites()`, magyar tartomány-formátum)
+> és az éjszakák számát (`tpa_ejszakak_szam()`) ezekből VEZETJÜK LE; a régi
+> `tpa_idopont`/`tpa_ejszakak` szabad mezők fallbackká váltak („csak ha nincs
+> pontos dátum"). Ez zárja ki a kézi dátum/éjszaka-eltéréseket (élő példa volt:
+> aug. 20–27. + „6 éjszaka" kiírás szept. 20–27-es linkek mellett).
+> (3) **Ár-kanonizálás (2 fős csomagár)** + BUGFIX: `tpa_teljes_ar()` mostantól
+> TÍPUSFÜGGŐ – buszos ajánlatnál a buszjegy-árat adja a szálláshoz (eddig
+> kihagyta!), és a típusváltás után bent ragadt, az űrlapon nem látható részár
+> nem számít bele. Az ár-megjegyzés `default`-ja megszűnt, helyette
+> `tpa_ar_megjegyzes_megjelenites()`: kézi szöveg vagy típus szerinti alapszöveg
+> (filter: `tpa_ar_megjegyzes_alapok`).
+> (4) **Aloldali ár-bontás**: 2+ kitöltött részár esetén tételsorok a végösszeg
+> fölött, alatta „mit tartalmaz az ár" típusfüggő sor (filter:
+> `tpa_ar_tartalom_szoveg`) + „Árak ellenőrizve: <utolsó módosítás dátuma>".
+> Az érvényességi dátum magyarul formázva (`tpa_datum_magyar()`).
+> (5) **Ár-rendezés javítva**: mentéskor `tpa_ar_szamitott` meta íródik
+> (`tpa_ar_szamitott_frissit()`, a `tpa_after_save_meta` hookon), a shortcode
+> `ar_novekvo/ar_csokkeno` erre rendez – a számított árú ajánlatok is jó helyre
+> kerülnek. Egyszeri backfill `admin_init`-en (`tpa_ar_szamitott_verzio` option).
+> (6) REST `tpa_api_format()` új mezői: `idopont_megjelenites`, `ejszakak_szam`,
+> `ar_megjegyzes_megjelenites`. Új ikonok: `hotel`, `utensils` (icons.php).
 >
 > **1.10.0**: az Ajánlat ↔ Úticél kapcsolat kétirányúvá vált a
 > megjelenítésben. (1) A `tpa_uticel` legördülő a WP adminban mostantól a

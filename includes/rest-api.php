@@ -165,6 +165,9 @@ function tpa_api_format( $post_id ) {
         'uticel_breadcrumb' => $uticel_breadcrumb,
         'ar_szamitott'    => $ar_szamitott,
         'ar_format'       => $ar_szamitott !== '' ? tpa_ar_format( $ar_szamitott ) : '',
+        'idopont_megjelenites' => tpa_idopont_megjelenites( $post_id ), // dátumokból képzett kiírás (vagy kézi szöveg)
+        'ejszakak_szam'        => tpa_ejszakak_szam( $post_id ),         // dátumokból számolt éjszakák (vagy kézi érték)
+        'ar_megjegyzes_megjelenites' => tpa_ar_megjegyzes_megjelenites( $post_id ),
         'lejart'          => tpa_lejart( $post_id ),
         'hatralevo_napok' => tpa_hatralevo_napok( $post_id ),
         'szallas_platform_nev' => tpa_szallas_platform_nev( $post_id ),

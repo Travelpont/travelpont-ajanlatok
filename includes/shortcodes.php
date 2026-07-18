@@ -31,14 +31,17 @@ function tpa_ajanlatok_shortcode( $atts ) {
     );
 
     // Rendezés
+    // Ár szerint a mentéskor eltárolt SZÁMÍTOTT ár (tpa_ar_szamitott) alapján
+    // rendezünk – így azok az ajánlatok is jó helyre kerülnek, ahol a tpa_ar
+    // üres és a teljes ár a részárak összegéből adódik.
     switch ( $atts['rendezes'] ) {
         case 'ar_novekvo':
-            $args['meta_key'] = 'tpa_ar';
+            $args['meta_key'] = 'tpa_ar_szamitott';
             $args['orderby']  = 'meta_value_num';
             $args['order']    = 'ASC';
             break;
         case 'ar_csokkeno':
-            $args['meta_key'] = 'tpa_ar';
+            $args['meta_key'] = 'tpa_ar_szamitott';
             $args['orderby']  = 'meta_value_num';
             $args['order']    = 'DESC';
             break;

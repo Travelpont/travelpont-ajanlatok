@@ -3,7 +3,7 @@
  * Plugin Name: Travelpont Ajánlatok
  * Plugin URI:  https://travelpont.hu
  * Description: Repülő-, busz- vagy csak szállás-ajánlatok kezelése és kártyás megjelenítése – ACF-mentes, önálló plugin, az aktivbalaton.hu plugin-konvenciók mintájára.
- * Version:     1.10.0
+ * Version:     1.11.0
  * Author:      travelpont.hu
  * Text Domain: travelpont-ajanlatok
  */
@@ -36,6 +36,24 @@ register_activation_hook( __FILE__, function() {
     flush_rewrite_rules();
 } );
 register_deactivation_hook( __FILE__, 'flush_rewrite_rules' );
+
+// ── Egyszeri backfill: tpa_ar_szamitott meta a meglévő ajánlatokra ────────────
+// Az ár szerinti rendezés (shortcodes.php) a mentéskor frissülő számított árat
+// használja – a plugin-frissítés előtt mentett ajánlatokra itt pótoljuk be.
+// Verzióváltásonként egyszer fut le (olcsó, amíg pár tucat ajánlat van).
+add_action( 'admin_init', function() {
+    if ( get_option( 'tpa_ar_szamitott_verzio' ) === TPA_VERSION ) return;
+    $idk = get_posts( array(
+        'post_type'   => 'ajanlat',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields'      => 'ids',
+    ) );
+    foreach ( $idk as $tpa_post_id ) {
+        tpa_ar_szamitott_frissit( $tpa_post_id );
+    }
+    update_option( 'tpa_ar_szamitott_verzio', TPA_VERSION );
+} );
 
 // ── Frontend eszközök ─────────────────────────────────────────────────────────
 // Csak regisztrálunk – a shortcode és a single nézet tölti be ténylegesen,

@@ -11,10 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 $post_id       = get_the_ID();
 $celallomas    = tpa_mezo( $post_id, 'tpa_celallomas' );
 $indulas       = tpa_mezo( $post_id, 'tpa_indulas' );
-$idopont       = tpa_mezo( $post_id, 'tpa_idopont' );
-$ejszakak      = tpa_mezo( $post_id, 'tpa_ejszakak' );
+$idopont       = tpa_idopont_megjelenites( $post_id );  // dátumokból képzett tartomány vagy kézi szöveg
+$ejszakak      = tpa_ejszakak_szam( $post_id );         // dátumokból számolva vagy kézi érték
+$szallas_nev   = tpa_mezo( $post_id, 'tpa_szallas_nev' );
+$csillagok     = tpa_szallas_csillag_html( $post_id );
+$ellatas       = tpa_ellatas_nev( $post_id );
+$tipus         = tpa_mezo( $post_id, 'tpa_ajanlat_tipus' );
 $ar            = tpa_teljes_ar( $post_id );
-$ar_megjegyzes = tpa_mezo( $post_id, 'tpa_ar_megjegyzes' );
+$ar_megjegyzes = tpa_ar_megjegyzes_megjelenites( $post_id );
 $ervenyes      = tpa_mezo( $post_id, 'tpa_ervenyes' );
 $kiwi_link     = tpa_mezo( $post_id, 'tpa_kiwi_link' );
 $busz_link     = tpa_mezo( $post_id, 'tpa_busz_link' );
@@ -22,6 +26,23 @@ $szallas_link  = tpa_mezo( $post_id, 'tpa_szallas_link' );
 $platform_nev  = tpa_szallas_platform_nev( $post_id );
 $lejart        = tpa_lejart( $post_id );
 $morzsa        = tpa_uticel_breadcrumb( tpa_mezo( $post_id, 'tpa_uticel' ), array( 'linkelt' => true ) );
+
+// Ár-bontás sorai (csak a típushoz tartozó, kitöltött részárak).
+// Csak akkor rajzoljuk ki, ha legalább 2 tétel van – egytételes bontás nem mond
+// többet a végösszegnél.
+$ar_reszek = array();
+if ( $tipus === 'repulo_szallas' || $tipus === '' ) {
+    $repjegy_ar = tpa_mezo( $post_id, 'tpa_repjegy_ar' );
+    if ( $repjegy_ar !== '' ) $ar_reszek[] = array( 'Repülőjegy (oda-vissza)', $repjegy_ar );
+}
+if ( $tipus === 'busz_szallas' ) {
+    $busz_ar = tpa_mezo( $post_id, 'tpa_busz_ar' );
+    if ( $busz_ar !== '' ) $ar_reszek[] = array( 'Buszjegy (oda-vissza)', $busz_ar );
+}
+$szallas_ar = tpa_mezo( $post_id, 'tpa_szallas_ar' );
+if ( $szallas_ar !== '' ) {
+    $ar_reszek[] = array( 'Szállás' . ( $ejszakak !== '' ? ' (' . $ejszakak . ' éj)' : '' ), $szallas_ar );
+}
 ?>
 <div class="tpa-single-doboz">
 
@@ -52,13 +73,27 @@ $morzsa        = tpa_uticel_breadcrumb( tpa_mezo( $post_id, 'tpa_uticel' ), arra
         <?php if ( $ejszakak !== '' ) : ?>
             <li><?php echo tpa_icon( 'moon' ); ?><span class="tpa-info-cimke">Éjszakák</span><span class="tpa-info-ertek"><?php echo esc_html( $ejszakak ); ?></span></li>
         <?php endif; ?>
+        <?php if ( $szallas_nev !== '' ) : ?>
+            <li><?php echo tpa_icon( 'hotel' ); ?><span class="tpa-info-cimke">Szállás</span><span class="tpa-info-ertek"><?php echo esc_html( $szallas_nev ); ?><?php echo $csillagok; // biztonságos HTML ?></span></li>
+        <?php endif; ?>
+        <?php if ( $ellatas !== '' ) : ?>
+            <li><?php echo tpa_icon( 'utensils' ); ?><span class="tpa-info-cimke">Ellátás</span><span class="tpa-info-ertek"><?php echo esc_html( $ellatas ); ?></span></li>
+        <?php endif; ?>
         <?php if ( $ervenyes && ! $lejart ) : ?>
-            <li><?php echo tpa_icon( 'clock' ); ?><span class="tpa-info-cimke">Érvényes</span><span class="tpa-info-ertek"><?php echo esc_html( $ervenyes ); ?>-ig</span></li>
+            <li><?php echo tpa_icon( 'clock' ); ?><span class="tpa-info-cimke">Érvényes</span><span class="tpa-info-ertek"><?php echo esc_html( tpa_datum_magyar( $ervenyes, 'Y. F j' ) ); ?>-ig</span></li>
         <?php endif; ?>
     </ul>
 
     <?php if ( $ar !== '' || ( ! $lejart && ( $kiwi_link || $busz_link || $szallas_link ) ) ) : ?>
         <div class="tpa-single-ar-panel">
+            <?php if ( $ar !== '' && count( $ar_reszek ) >= 2 ) : ?>
+                <ul class="tpa-single-ar-bontas">
+                    <?php foreach ( $ar_reszek as $ar_resz ) : ?>
+                        <li><span><?php echo esc_html( $ar_resz[0] ); ?></span><span><?php echo esc_html( tpa_ar_format( $ar_resz[1] ) ); ?></span></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+
             <?php if ( $ar !== '' ) : ?>
                 <div class="tpa-single-ar-blokk">
                     <span class="tpa-single-ar"><?php echo esc_html( tpa_ar_format( $ar ) ); ?></span>
@@ -66,6 +101,12 @@ $morzsa        = tpa_uticel_breadcrumb( tpa_mezo( $post_id, 'tpa_uticel' ), arra
                         <span class="tpa-single-ar-megjegyzes"><?php echo esc_html( $ar_megjegyzes ); ?></span>
                     <?php endif; ?>
                 </div>
+                <p class="tpa-ar-tartalom">
+                    <?php
+                    $ar_tartalom = tpa_ar_tartalom_szoveg( $post_id );
+                    if ( $ar_tartalom !== '' ) echo esc_html( $ar_tartalom ) . ' ';
+                    ?>Árak ellenőrizve: <?php echo esc_html( get_the_modified_date( 'Y. F j.', $post_id ) ); ?> – a partneroldalakon az aktuális ár ettől eltérhet.
+                </p>
             <?php endif; ?>
 
             <?php if ( ! $lejart && ( $kiwi_link || $busz_link || $szallas_link ) ) : ?>

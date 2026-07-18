@@ -151,6 +151,28 @@
     align-items: flex-start !important;
 }
 
+/* Szállás-sor a kártyán (név + csillagok + ellátás) – hosszú hotelnév is törhet */
+.tpa-card-szallas {
+    align-items: flex-start !important;
+}
+
+.tpa-card-szallas .tpa-icon {
+    margin-top: .12em;
+}
+
+.tpa-card-szallas span {
+    min-width: 0;
+    word-break: break-word;
+}
+
+/* Csillagbesorolás (★★★★) – kártyán és aloldali chipben egyaránt */
+.tpa-csillagok {
+    color: var(--tpa-accent);
+    letter-spacing: .08em;
+    margin-left: .35rem;
+    white-space: nowrap;
+}
+
 .tpa-card-hely .tpa-icon {
     margin-top: .12em;
 }
@@ -322,12 +344,45 @@
     margin: 0 0 1.5rem;
 }
 
+/* Ár-bontás (repjegy/busz/szállás tételsorok a végösszeg fölött) */
+.tpa-single-ar-bontas {
+    list-style: none;
+    margin: 0 0 .9rem;
+    padding: 0 0 .75rem;
+    border-bottom: 1px dashed #99f6e4;
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    font-size: .92rem;
+    color: var(--tpa-text);
+}
+
+.tpa-single-ar-bontas li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0;
+}
+
+.tpa-single-ar-bontas li span:last-child {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
 .tpa-single-ar-blokk {
     display: flex;
     align-items: baseline;
     flex-wrap: wrap;
     gap: .6rem;
     margin-bottom: 1rem;
+}
+
+/* "Mit tartalmaz az ár" + árellenőrzés dátuma – apróbetűs sor az ár alatt */
+.tpa-ar-tartalom {
+    margin: -.5rem 0 1rem;
+    font-size: .8rem;
+    color: var(--tpa-text-light);
+    line-height: 1.5;
 }
 
 .tpa-single-ar {
