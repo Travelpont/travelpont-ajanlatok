@@ -1,6 +1,8 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.13.1 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.13.2 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.13.2: a lépés-gombok kompaktabbak – kisebb padding, 16px lekerekítés,
+> feszesebb sorköz; mobilon nem hatnak felfújt léggömbnek)
 > (minta: `E:\aktivbalaton.hu\Saját pluginok\_AKTIV\balaton-szallasok`)
 > SZABÁLY: minden módosításkor verziót emelünk a fő fájl fejlécében
 > (cache-buster + követhetőség).
