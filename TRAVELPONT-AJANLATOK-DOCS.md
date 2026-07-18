@@ -1,6 +1,12 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.13.3 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.13.4 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.13.4: KÉPKONVENCIÓ-fix. A borítóképek 1920x1080-asak, a felirat beléjük
+> van szerkesztve [lásd travelpont-uticelok], ezért 16:9 kerettel kell mutatni
+> őket, hogy semmi ne vágódjon le. A hero [21/8 → 16/9], a kártya-kép
+> [16/10 → 16/9] és az Úticél-ajánló kép [stretch → 16/9 keret, align-items
+> center] mind erre javítva – eddig levágták/torzították a képbe szerkesztett
+> feliratot.)
 > (1.13.3: a gombok alatti affiliate-közzététel eltávolítva a látogatói
 > nézetből [Gabesz döntése]; az ár-tartalom sorban „partneroldalakon” →
 > „foglalási oldalon”. A linkek rel="sponsored" attribútuma megmarad – ez a

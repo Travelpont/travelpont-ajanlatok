@@ -59,7 +59,10 @@
 
 .tpa-card-kep {
     position: relative;
-    aspect-ratio: 16 / 10;
+    /* 16:9 = Petra feliratos borítóképeinek (1920x1080) natív aránya – a
+       felirat beléjük van szerkesztve, 16:9 kerettel semmi nem vágódik le.
+       Lásd a travelpont-uticelok konvenciót (frontend.css "feliratos"). */
+    aspect-ratio: 16 / 9;
     overflow: hidden;
     background: #e0f2fe;
 }
@@ -289,7 +292,9 @@
 /* ── Hero kép (kiemelt kép, doboz-szélig kifutva) ───────────────────────── */
 .tpa-single-hero {
     margin: -1.5rem -1.5rem 1.25rem;
-    aspect-ratio: 21 / 8;
+    /* 16:9 – a feliratos borítókép natív aránya (lásd .tpa-card-kep).
+       Korábban 21/8 volt, ami levágta a képbe szerkesztett feliratot. */
+    aspect-ratio: 16 / 9;
     overflow: hidden;
     border-radius: var(--tpa-radius) var(--tpa-radius) 0 0;
     background: #e0f2fe;
@@ -303,11 +308,6 @@
     margin: 0;
 }
 
-@media (max-width: 600px) {
-    .tpa-single-hero {
-        aspect-ratio: 16 / 10;
-    }
-}
 
 /* ── Morzsamenü (összekötött úticél útvonala, linkelt) ───────────────────── */
 .tpa-single-morzsa {
@@ -735,7 +735,7 @@
 .tpa-uticel-ajanlo {
     display: flex;
     gap: 1.25rem;
-    align-items: stretch;
+    align-items: center;
     background: #f8fafc;
     border: 1px solid var(--tpa-card-border);
     border-radius: 12px;
@@ -746,6 +746,9 @@
 .tpa-uticel-ajanlo-kep {
     flex: 0 0 38%;
     max-width: 320px;
+    /* 16:9 keret a feliratos borítóképhez – NEM nyúlik a szöveg magasságára
+       (az stretch levágta/torzította a képbe szerkesztett feliratot). */
+    aspect-ratio: 16 / 9;
     display: block;
 }
 
