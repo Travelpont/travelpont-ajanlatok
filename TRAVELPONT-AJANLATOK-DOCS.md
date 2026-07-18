@@ -1,6 +1,11 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.13.2 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.13.3 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.13.3: a gombok alatti affiliate-közzététel eltávolítva a látogatói
+> nézetből [Gabesz döntése]; az ár-tartalom sorban „partneroldalakon” →
+> „foglalási oldalon”. A linkek rel="sponsored" attribútuma megmarad – ez a
+> forráskódban van, a látogató nem látja, viszont a Google-nek jelzi a link
+> jellegét, ezért SEO-szempontból hasznos megtartani.)
 > (1.13.2: a lépés-gombok kompaktabbak – kisebb padding, 16px lekerekítés,
 > feszesebb sorköz; mobilon nem hatnak felfújt léggömbnek)
 > (minta: `E:\aktivbalaton.hu\Saját pluginok\_AKTIV\balaton-szallasok`)

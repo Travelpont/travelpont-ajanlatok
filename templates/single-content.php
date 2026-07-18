@@ -133,7 +133,7 @@ if ( $szallas_ar !== '' ) {
                     <?php
                     $ar_tartalom = tpa_ar_tartalom_szoveg( $post_id );
                     if ( $ar_tartalom !== '' ) echo esc_html( $ar_tartalom ) . ' ';
-                    ?>Árak ellenőrizve: <?php echo esc_html( get_the_modified_date( 'Y. F j.', $post_id ) ); ?> – a partneroldalakon az aktuális ár ettől eltérhet.
+                    ?>Árak ellenőrizve: <?php echo esc_html( get_the_modified_date( 'Y. F j.', $post_id ) ); ?> – a foglalási oldalon az aktuális ár ettől eltérhet.
                 </p>
             <?php endif; ?>
 
@@ -168,12 +168,6 @@ if ( $szallas_ar !== '' ) {
                         </a>
                     <?php endif; ?>
                 </div>
-                <p class="tpa-affiliate-kozzetetel">
-                    <?php echo esc_html( apply_filters(
-                        'tpa_affiliate_kozzetetel_szoveg',
-                        'A fenti linkek affiliate linkek: ha rajtuk keresztül foglalsz, a Travelpont jutalékot kap – neked ez semmivel sem kerül többe. Bármelyik linkkel támogatsz minket, de a legtöbbet azzal segítesz, ha mindkét lépést innen indítod. Köszönjük! 💛'
-                    ) ); ?>
-                </p>
             <?php endif; ?>
         </div>
     <?php endif; ?>
