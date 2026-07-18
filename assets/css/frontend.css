@@ -637,6 +637,7 @@
     flex: 1 1 240px;
     padding: .8rem 1.4rem;
     font-size: 1rem;
+    white-space: normal; /* a hosszú felirat ("Szállás foglalása – Booking.com") a gombon BELÜL törjön, ne lógjon ki */
 }
 
 .tpa-gomb-repjegy,
@@ -810,5 +811,89 @@
 
     .tpa-gomb {
         width: 100%;
+    }
+}
+
+/* ═══ Mobil: az aloldal kitöltse a keskeny kijelzőt (v1.13.1) ═════════════
+   A téma (Kadence) a bejegyzést amúgy is fehér kártyába teszi belső
+   paddinggel – ezen belül a plugin saját keretezett doboza csak a helyet
+   ette (a ~412px-es kijelzőből ~250px maradt a tartalomnak, szavak törtek
+   ketté). Mobilon ezért a plugin-dobozt kisimítjuk, a chipeket teljes
+   szélességű sorokká alakítjuk. */
+@media (max-width: 600px) {
+    /* A téma tartalom-kártyájának paddingje mérsékelve – CSAK az ajánlat-oldalon */
+    .single-ajanlat .entry-content-wrap {
+        padding: 1.25rem 1rem;
+    }
+
+    /* A cím ne szavanként törjön óriás betűkkel */
+    .single-ajanlat h1.entry-title {
+        font-size: 1.6rem;
+        line-height: 1.25;
+    }
+
+    .tpa-single-doboz {
+        padding: 0;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .tpa-single-hero {
+        margin: 0 0 1rem;
+        border-radius: 12px;
+    }
+
+    /* Infó-chipek: teljes szélességű sorok – címke balra, érték jobbra;
+       így nincs több szó közepén törő "Érvény-es" / "Időp-ont" */
+    .tpa-single-info {
+        gap: .4rem;
+    }
+
+    .tpa-single-info li {
+        width: 100%;
+        border-radius: 12px;
+    }
+
+    .tpa-info-cimke {
+        flex-shrink: 0;
+    }
+
+    .tpa-single-info li .tpa-info-ertek {
+        margin-left: auto;
+        text-align: right;
+        min-width: 0;
+    }
+
+    .tpa-single-info li .tpa-utvonal-blokk {
+        margin-left: auto;
+        align-items: flex-end;
+        text-align: right;
+    }
+
+    .tpa-single-ar-panel {
+        padding: 1rem .9rem;
+    }
+
+    .tpa-single-ar {
+        font-size: 1.7rem;
+    }
+
+    .tpa-single-ar-bontas {
+        font-size: .88rem;
+    }
+
+    .tpa-single-ar-bontas li span:last-child {
+        flex-shrink: 0;
+    }
+
+    .tpa-uticel-ajanlo-torzs {
+        padding: 1rem;
+    }
+
+    /* Galéria: 2 oszlop, ne óriási, egymás alatti képek legyenek */
+    .tpa-galeria {
+        grid-template-columns: repeat(2, 1fr);
+        gap: .5rem;
     }
 }

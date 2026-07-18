@@ -1,9 +1,18 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.13.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.13.1 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
 > (minta: `E:\aktivbalaton.hu\Saját pluginok\_AKTIV\balaton-szallasok`)
 > SZABÁLY: minden módosításkor verziót emelünk a fő fájl fejlécében
 > (cache-buster + követhetőség).
+>
+> **1.13.1** – mobil-javítás (Gabesz képernyőképei alapján, 2026-07-18):
+> ≤600px-en a `.tpa-single-doboz` kisimul (nincs saját keret/padding – a téma
+> kártyája már keretez; eddig ~250px maradt a tartalomnak és szavak törtek
+> ketté), az infó-chipek teljes szélességű sorok (címke balra, érték jobbra),
+> a `.tpa-single-gombok .tpa-gomb` feliratai a gombon BELÜL törnek
+> (`white-space: normal` – eddig a "Szállás foglalása – Booking.com" kilógott),
+> mérsékelt téma-padding + kisebb H1 (`.single-ajanlat` scope), 2 oszlopos
+> galéria, kompaktabb ár-panel.
 >
 > **1.13.0** – konverzió- és tartalom-csomag (a 2026-07-18-i ötletelés 6 pontja).
 > (1) **Számozott foglalási út**: két linkes ajánlatnál a gombok „1. lépés /
