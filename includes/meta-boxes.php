@@ -58,6 +58,22 @@ function tpa_render_field( $post_id, $key, $field ) {
         ( $show_if_tipus ? ' data-tpa-show-if-tipus="' . esc_attr( $show_if_tipus ) . '"' : '' ) . '>';
     echo '<label for="' . esc_attr( $key ) . '"><strong>' . esc_html( $field['label'] ) . '</strong></label>';
 
+    // Readonly mező (pl. találat dátuma): csak olvashatóan írjuk ki, input nélkül
+    // – a mentés (admin és REST) is kihagyja, az értéket a plugin maga kezeli.
+    if ( ! empty( $field['readonly'] ) ) {
+        if ( $value !== '' ) {
+            $kiiras = $type === 'date' ? tpa_datum_magyar( $value ) : $value;
+            echo '<p class="tpa-readonly-ertek">' . esc_html( $kiiras ) . '</p>';
+        } else {
+            echo '<p class="tpa-readonly-ertek"><em>— első publikáláskor automatikusan kitöltődik —</em></p>';
+        }
+        if ( ! empty( $field['desc'] ) ) {
+            echo '<p class="description">' . esc_html( $field['desc'] ) . '</p>';
+        }
+        echo '</div>';
+        return;
+    }
+
     switch ( $type ) {
         case 'textarea':
             printf(
@@ -139,6 +155,7 @@ add_action( 'save_post_ajanlat', function( $post_id ) {
     if ( ! current_user_can( 'edit_post', $post_id ) ) return;
 
     foreach ( tpa_get_fields() as $key => $field ) {
+        if ( ! empty( $field['readonly'] ) ) continue; // pl. találat dátuma – a plugin kezeli
         if ( ! isset( $_POST[ $key ] ) ) continue;
 
         $raw   = wp_unslash( $_POST[ $key ] );

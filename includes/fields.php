@@ -161,27 +161,35 @@ function tpa_get_fields() {
 
         // 💰 Ár és érvényesség
         'tpa_repjegy_ar' => array(
-            'label'         => 'Repjegy ár (Ft, oda-vissza)',
+            'label'         => 'Repjegy ára (Ft/fő, oda-vissza)',
             'type'          => 'number',
             'section'       => 'ar',
-            'placeholder'   => 'pl. 78900',
-            'desc'          => 'Csak szám, tagolás nélkül. A kezdőlapi ajánlat-kártyán külön sorban jelenik meg.',
+            'placeholder'   => 'pl. 39450',
+            'desc'          => 'Csak szám, tagolás nélkül, EGY FŐRE. Az összesen árhoz a „Hány főre szól” mezővel szorozzuk.',
             'show_if_tipus' => array( 'repulo_szallas' ),
         ),
         'tpa_busz_ar' => array(
-            'label'         => 'Buszjegy ár (Ft, oda-vissza)',
+            'label'         => 'Buszjegy ára (Ft/fő, oda-vissza)',
             'type'          => 'number',
             'section'       => 'ar',
-            'placeholder'   => 'pl. 24900',
-            'desc'          => 'Csak szám, tagolás nélkül. A kezdőlapi ajánlat-kártyán külön sorban jelenik meg.',
+            'placeholder'   => 'pl. 12450',
+            'desc'          => 'Csak szám, tagolás nélkül, EGY FŐRE. Az összesen árhoz a „Hány főre szól” mezővel szorozzuk.',
             'show_if_tipus' => array( 'busz_szallas' ),
         ),
         'tpa_szallas_ar' => array(
-            'label'       => 'Szállás ár (Ft, teljes tartózkodásra)',
+            'label'       => 'Szállás ára (Ft, összesen)',
             'type'        => 'number',
             'section'     => 'ar',
             'placeholder' => 'pl. 112000',
-            'desc'        => 'Csak szám, tagolás nélkül. A kezdőlapi ajánlat-kártyán külön sorban jelenik meg.',
+            'desc'        => 'Csak szám, tagolás nélkül – a TELJES csomagra (nem főnkénti ár).',
+        ),
+        'tpa_fo_szam' => array(
+            'label'       => 'Hány főre szól',
+            'type'        => 'number',
+            'section'     => 'ar',
+            'default'     => '2',
+            'placeholder' => '2',
+            'desc'        => 'A csomagár ennyi főre értendő – a repjegy/buszjegy főnkénti árát ezzel szorozzuk az összesen sorban.',
         ),
         'tpa_ar' => array(
             'label'       => 'Ár (Ft) – összesített',
@@ -216,10 +224,28 @@ function tpa_get_fields() {
             'section'     => 'ar',
             'desc'        => 'A dátum után az ajánlat automatikusan eltűnik a listából. Üresen hagyva soha nem jár le.',
         ),
+        'tpa_statusz' => array(
+            'label'   => 'Deal státusza',
+            'type'    => 'select',
+            'section' => 'ar',
+            'options' => array(
+                'aktiv'  => 'Aktív',
+                'lejart' => 'Lejárt',
+            ),
+            'default' => 'aktiv',
+            'desc'    => 'Lejártra állítva az ajánlat NEM tűnik el: a kártyán halványított árakkal és „a jó árak visszatérnek” üzenettel jelenik meg.',
+        ),
+        'tpa_talalat_datuma' => array(
+            'label'    => 'Találat dátuma',
+            'type'     => 'date',
+            'section'  => 'ar',
+            'readonly' => true,
+            'desc'     => 'Automatikus: az első publikáláskor az aznapi dátum mentődik – kézzel nem szerkeszthető. Ettől számítjuk a kártyán az ár-frissesség figyelmeztetést.',
+        ),
 
         // 🔗 Affiliate linkek
         'tpa_kiwi_link' => array(
-            'label'         => 'Kiwi.com deep link',
+            'label'         => 'Repjegy affiliate link (Kiwi deep link)',
             'type'          => 'url',
             'section'       => 'linkek',
             'placeholder'   => 'https://c111.travelpayouts.com/click?shmarker=...',
@@ -294,28 +320,40 @@ function tpa_ar_format( $ar ) {
     return number_format( (float) $ar, 0, ',', ' ' ) . ' Ft';
 }
 
+// ── Hány főre szól az ajánlat (default 2, minimum 1) ─────────────────────────
+function tpa_fo_szam( $post_id ) {
+    return max( 1, (int) tpa_mezo( $post_id, 'tpa_fo_szam' ) );
+}
+
+// ── Az utazási költség (repjegy VAGY buszjegy) FŐNKÉNTI ára + címkéje ─────────
+// TÍPUSFÜGGŐ: csak az ajánlat típusához tartozó mező számít (repülős → repjegy,
+// buszos → buszjegy, csak szállás → nincs) – a típusváltás után bent ragadt
+// régi részár így nem torzít. Visszaad: array( 'ar' => '39450'|'', 'cimke' => 'Repjegy'|'Buszjegy'|'' )
+function tpa_utazas_ar_fo( $post_id ) {
+    $tipus = tpa_mezo( $post_id, 'tpa_ajanlat_tipus' );
+    if ( $tipus === 'csak_szallas' ) {
+        return array( 'ar' => '', 'cimke' => '' );
+    }
+    if ( $tipus === 'busz_szallas' ) {
+        return array( 'ar' => tpa_mezo( $post_id, 'tpa_busz_ar' ), 'cimke' => 'Buszjegy' );
+    }
+    // repulo_szallas + régi, típus nélküli ajánlatok
+    return array( 'ar' => tpa_mezo( $post_id, 'tpa_repjegy_ar' ), 'cimke' => 'Repjegy' );
+}
+
 // ── Teljes ár: a kézzel beírt "tpa_ar", vagy ha az üres, a részárak összege ───
-// TÍPUSFÜGGŐ: csak az ajánlat típusához tartozó utazási költség számít bele
-// (repülős → repjegy, buszos → buszjegy, csak szállás → semmi). Így a
-// típusváltás után az űrlapon már nem látható, bent ragadt régi részár nem
-// torzítja láthatatlanul az összeget.
+// Képlet: (főnkénti utazási ár × fő-szám) + szállás ár (a szállás ár már a
+// teljes csomagra értendő). A repjegy/buszjegy mező FŐNKÉNTI árat tárol.
 function tpa_teljes_ar( $post_id ) {
     $ar = tpa_mezo( $post_id, 'tpa_ar' );
     if ( $ar !== '' ) return $ar;
 
-    $tipus   = tpa_mezo( $post_id, 'tpa_ajanlat_tipus' );
+    $utazas  = tpa_utazas_ar_fo( $post_id );
     $szallas = tpa_mezo( $post_id, 'tpa_szallas_ar' );
 
-    $utazas = '';
-    if ( $tipus === 'busz_szallas' ) {
-        $utazas = tpa_mezo( $post_id, 'tpa_busz_ar' );
-    } elseif ( $tipus !== 'csak_szallas' ) { // repulo_szallas + régi, típus nélküli ajánlatok
-        $utazas = tpa_mezo( $post_id, 'tpa_repjegy_ar' );
-    }
+    if ( $utazas['ar'] === '' && $szallas === '' ) return '';
 
-    if ( $utazas === '' && $szallas === '' ) return '';
-
-    return (string) ( (float) $utazas + (float) $szallas );
+    return (string) ( (float) $utazas['ar'] * tpa_fo_szam( $post_id ) + (float) $szallas );
 }
 
 // ── Számított ár eltárolása meta-ként (ár szerinti rendezéshez) ───────────────
@@ -375,11 +413,12 @@ function tpa_ar_megjegyzes_megjelenites( $post_id ) {
     if ( $sajat !== '' ) return $sajat;
 
     $tipus = tpa_mezo( $post_id, 'tpa_ajanlat_tipus' );
+    $fo    = tpa_fo_szam( $post_id );
     $alap  = apply_filters( 'tpa_ar_megjegyzes_alapok', array(
-        'repulo_szallas' => '2 fő, repülőjeggyel együtt',
-        'busz_szallas'   => '2 fő, buszjeggyel együtt',
-        'csak_szallas'   => '2 fő részére',
-    ) );
+        'repulo_szallas' => $fo . ' fő, repülőjeggyel együtt',
+        'busz_szallas'   => $fo . ' fő, buszjeggyel együtt',
+        'csak_szallas'   => $fo . ' fő részére',
+    ), $fo );
     if ( isset( $alap[ $tipus ] ) ) return $alap[ $tipus ];
     return isset( $alap['repulo_szallas'] ) ? $alap['repulo_szallas'] : '';
 }
@@ -524,6 +563,35 @@ function tpa_lejart( $post_id ) {
     if ( ! $ervenyes ) return false; // nincs dátum = soha nem jár le
     return $ervenyes < current_time( 'Y-m-d' );
 }
+
+// ── Lejárt-e a DEAL? (kézi státusz VAGY érvényességi dátum) ───────────────────
+// A tpa_statusz a kézi kapcsoló ("lejart" = az árak már nem élnek, de az
+// ajánlat maradjon kint halványítva) – a tpa_ervenyes dátum-lejárat mellett
+// ez is lejárt megjelenítést vált ki a kártyán és az aloldalon.
+function tpa_deal_lejart( $post_id ) {
+    return tpa_mezo( $post_id, 'tpa_statusz' ) === 'lejart' || tpa_lejart( $post_id );
+}
+
+// ── Régi-e már a találat? (frissesség-küszöb a beállításokból) ────────────────
+// true, ha a találat dátuma a beállított küszöbnél (nap) régebbi – ilyenkor a
+// kártyán ár-változás figyelmeztetés jelenik meg. Egyszerű dátum-összehasonlítás
+// megjelenítéskor, nincs cron/API.
+function tpa_talalat_regi( $post_id ) {
+    $talalat = tpa_mezo( $post_id, 'tpa_talalat_datuma' );
+    if ( ! $talalat ) return false;
+    $eltelt_nap = ( strtotime( current_time( 'Y-m-d' ) ) - strtotime( $talalat ) ) / DAY_IN_SECONDS;
+    return $eltelt_nap > tpa_frissesseg_kuszob();
+}
+
+// ── Találat dátuma: első publikáláskor automatikusan rögzül ───────────────────
+// A transition_post_status az admin mentésre ÉS a Portál REST create-jére is
+// lefut; a mező readonly, a save-utak kihagyják, így utólag nem íródik felül.
+add_action( 'transition_post_status', function( $new_status, $old_status, $post ) {
+    if ( $post->post_type !== 'ajanlat' ) return;
+    if ( $new_status !== 'publish' || $old_status === 'publish' ) return;
+    if ( get_post_meta( $post->ID, 'tpa_talalat_datuma', true ) !== '' ) return;
+    update_post_meta( $post->ID, 'tpa_talalat_datuma', current_time( 'Y-m-d' ) );
+}, 10, 3 );
 
 // ── Hány nap van még hátra? (null = nincs lejárat) ────────────────────────────
 function tpa_hatralevo_napok( $post_id ) {

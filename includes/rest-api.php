@@ -129,6 +129,7 @@ function tpa_api_args() {
     );
 
     foreach ( tpa_get_fields() as $key => $field ) {
+        if ( ! empty( $field['readonly'] ) ) continue; // pl. találat dátuma – a plugin kezeli
         $args[ $key ] = array( 'type' => 'string', 'default' => '' );
     }
 
@@ -169,6 +170,8 @@ function tpa_api_format( $post_id ) {
         'ejszakak_szam'        => tpa_ejszakak_szam( $post_id ),         // dátumokból számolt éjszakák (vagy kézi érték)
         'ar_megjegyzes_megjelenites' => tpa_ar_megjegyzes_megjelenites( $post_id ),
         'lejart'          => tpa_lejart( $post_id ),
+        'deal_lejart'     => tpa_deal_lejart( $post_id ),  // kézi státusz VAGY dátum-lejárat
+        'talalat_regi'    => tpa_talalat_regi( $post_id ), // frissesség-küszöbnél régebbi találat
         'hatralevo_napok' => tpa_hatralevo_napok( $post_id ),
         'szallas_platform_nev' => tpa_szallas_platform_nev( $post_id ),
         'kategoriak'      => $kategoriak,
@@ -197,6 +200,7 @@ function tpa_api_format( $post_id ) {
 // ── Egyedi mezők mentése (create/update közös, tpa_get_fields()-re épül) ──────
 function tpa_api_save_fields( $post_id, WP_REST_Request $req ) {
     foreach ( tpa_get_fields() as $key => $field ) {
+        if ( ! empty( $field['readonly'] ) ) continue; // pl. találat dátuma – a plugin kezeli
         if ( $req->get_param( $key ) === null ) continue;
 
         $raw   = wp_unslash( $req->get_param( $key ) );

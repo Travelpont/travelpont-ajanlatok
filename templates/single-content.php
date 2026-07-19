@@ -25,20 +25,23 @@ $kiwi_link     = tpa_mezo( $post_id, 'tpa_kiwi_link' );
 $busz_link     = tpa_mezo( $post_id, 'tpa_busz_link' );
 $szallas_link  = tpa_mezo( $post_id, 'tpa_szallas_link' );
 $platform_nev  = tpa_szallas_platform_nev( $post_id );
-$lejart        = tpa_lejart( $post_id );
+$lejart        = tpa_deal_lejart( $post_id ); // kézi "Lejárt" státusz VAGY érvényességi dátum
 $morzsa        = tpa_uticel_breadcrumb( tpa_mezo( $post_id, 'tpa_uticel' ), array( 'linkelt' => true ) );
 
 // Ár-bontás sorai (csak a típushoz tartozó, kitöltött részárak).
+// A repjegy/buszjegy mező FŐNKÉNTI árat tárol – itt a fő-számmal felszorzott
+// tétel szerepel, hogy a sorok összege kiadja a végösszeget.
 // Csak akkor rajzoljuk ki, ha legalább 2 tétel van – egytételes bontás nem mond
 // többet a végösszegnél.
+$fo_szam   = tpa_fo_szam( $post_id );
+$utazas    = tpa_utazas_ar_fo( $post_id );
 $ar_reszek = array();
-if ( $tipus === 'repulo_szallas' || $tipus === '' ) {
-    $repjegy_ar = tpa_mezo( $post_id, 'tpa_repjegy_ar' );
-    if ( $repjegy_ar !== '' ) $ar_reszek[] = array( 'Repülőjegy (oda-vissza)', $repjegy_ar );
-}
-if ( $tipus === 'busz_szallas' ) {
-    $busz_ar = tpa_mezo( $post_id, 'tpa_busz_ar' );
-    if ( $busz_ar !== '' ) $ar_reszek[] = array( 'Buszjegy (oda-vissza)', $busz_ar );
+if ( $utazas['ar'] !== '' ) {
+    $utazas_cimke = $utazas['cimke'] === 'Buszjegy' ? 'Buszjegy' : 'Repülőjegy';
+    $ar_reszek[] = array(
+        $utazas_cimke . ' (oda-vissza, ' . $fo_szam . ' fő)',
+        (float) $utazas['ar'] * $fo_szam,
+    );
 }
 $szallas_ar = tpa_mezo( $post_id, 'tpa_szallas_ar' );
 if ( $szallas_ar !== '' ) {

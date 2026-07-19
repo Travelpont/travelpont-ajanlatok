@@ -249,6 +249,103 @@
     color: var(--tpa-text-light);
 }
 
+/* ── Deal-blokk a kártya láblécében (ár-bontás, találat, gombok) ────────── */
+.tpa-card-lablec-deal {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .5rem;
+}
+
+.tpa-card-ar-bontas {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    font-size: .9rem;
+    color: var(--tpa-text);
+}
+
+.tpa-card-ar-bontas li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0;
+}
+
+.tpa-card-ar-bontas .tpa-card-ar-ertek {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.tpa-card-ar-osszesen {
+    padding-top: .3rem;
+    border-top: 1px dashed var(--tpa-card-border);
+    font-weight: 700;
+}
+
+.tpa-card-ar-osszesen .tpa-card-ar-ertek {
+    color: var(--tpa-primary);
+    font-size: 1.05rem;
+}
+
+.tpa-card-talalat {
+    font-size: .75rem;
+    color: var(--tpa-text-light);
+}
+
+/* Ár-frissesség figyelmeztetés (a találat régebbi a beállított küszöbnél) */
+.tpa-card-frissesseg {
+    margin: 0;
+    font-size: .78rem;
+    line-height: 1.4;
+    color: #92400e;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: .45rem .6rem;
+}
+
+/* Lejárt deal: árak halványítva + áthúzva, barátságos üzenettel */
+.tpa-card-lejart .tpa-card-ar-bontas {
+    opacity: .55;
+}
+
+.tpa-card-lejart .tpa-card-ar-ertek {
+    text-decoration: line-through;
+}
+
+.tpa-card-lejart-uzenet {
+    margin: 0;
+    font-size: .82rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #b91c1c;
+}
+
+.tpa-card-gombok {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+
+.tpa-card-gombok .tpa-gomb {
+    width: 100%;
+}
+
+.tpa-card-uticel-link {
+    text-align: center;
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--tpa-primary);
+    text-decoration: none;
+}
+
+.tpa-card-uticel-link:hover {
+    text-decoration: underline;
+}
+
 /* ── Gombok ─────────────────────────────────────────────────────────────── */
 .tpa-gomb {
     display: inline-block;

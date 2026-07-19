@@ -1,6 +1,32 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.13.4 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.14.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.14.0: DEAL-LOGIKA. **ÁR-SZEMANTIKA VÁLTÁS: a `tpa_repjegy_ar` és
+> `tpa_busz_ar` mostantól FŐNKÉNTI ár [Ft/fő]** – a korábbi 2 fős csomagár
+> helyett; az összesen ár képlete: főnkénti utazási ár × `tpa_fo_szam`
+> [új mező, default 2] + szállás ár [`tpa_teljes_ar()`, helper:
+> `tpa_utazas_ar_fo()`, `tpa_fo_szam()`]. **MIGRÁCIÓ: a korábban felvitt
+> ajánlatokban a repjegy-árat felezni kell [2 fős → per fő], különben az
+> összesen duplázódik!** Új mezők: `tpa_statusz` [aktiv/lejart kézi kapcsoló –
+> lejárt deal nem tűnik el: halványított/áthúzott árak, „Ez a deal lejárt —
+> de a jó árak visszatérnek!" üzenet, „Nézd meg az aktuális árat" gomb +
+> kapcsolt úticél-link; helper: `tpa_deal_lejart()` = kézi státusz VAGY
+> dátum-lejárat, az aloldal is ezt használja] és `tpa_talalat_datuma`
+> [readonly – első publikáláskor automatikusan mentődik,
+> `transition_post_status`; a verzió-backfill a régi publikált ajánlatokra
+> a publikálás napját pótolja be]. Új mező-attribútum: `readonly => true` –
+> az admin csak kiírja, a mentés (metabox ÉS REST) kihagyja. Új beállítások
+> oldal: Ajánlatok menü → „Ajánlat beállítások" [`includes/settings.php`,
+> Settings API, option: `travelpont_frissesseg_kuszob`, default 3 nap] –
+> ennél régebbi találatnál a kártyán: „Az ár azóta változhatott — a friss
+> árat a foglalási linken látod" [`tpa_talalat_regi()`]. Kártya-lábléc újra:
+> ár-bontás sorok [Repjegy: X Ft/fő · Szállás: Y Ft · Összesen: Z Ft / N fő],
+> „Találat: júl. 19." címke, és aktív dealnél KÉT affiliate gomb [Repjegy/
+> Buszjegy foglalása + Szállás foglalása, target=_blank,
+> rel="nofollow sponsored noopener"] – a permalinkes „Megnézem" csak
+> fallback, ha nincs link. A kezdőlap-plugin ajánlat-modulja „/fő" jelölést
+> kapott az utazási ár-sorokra. Nincs külső API/cron: a frissesség-ellenőrzés
+> megjelenítéskori dátum-összehasonlítás.)
 > (1.13.4: KÉPKONVENCIÓ-fix. A borítóképek 1920x1080-asak, a felirat beléjük
 > van szerkesztve [lásd travelpont-uticelok], ezért 16:9 kerettel kell mutatni
 > őket, hogy semmi ne vágódjon le. A hero [21/8 → 16/9], a kártya-kép

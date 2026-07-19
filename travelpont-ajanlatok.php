@@ -3,7 +3,7 @@
  * Plugin Name: Travelpont Ajánlatok
  * Plugin URI:  https://travelpont.hu
  * Description: Repülő-, busz- vagy csak szállás-ajánlatok kezelése és kártyás megjelenítése – ACF-mentes, önálló plugin, az aktivbalaton.hu plugin-konvenciók mintájára.
- * Version:     1.13.4
+ * Version:     1.14.0
  * Author:      travelpont.hu
  * Text Domain: travelpont-ajanlatok
  */
@@ -22,6 +22,7 @@ add_action( 'add_meta_boxes', function() {
 
 // ── Modulok betöltése ─────────────────────────────────────────────────────────
 require_once TPA_PATH . 'includes/icons.php';
+require_once TPA_PATH . 'includes/settings.php';
 require_once TPA_PATH . 'includes/fields.php';
 require_once TPA_PATH . 'includes/cpt.php';
 require_once TPA_PATH . 'includes/meta-boxes.php';
@@ -37,9 +38,11 @@ register_activation_hook( __FILE__, function() {
 } );
 register_deactivation_hook( __FILE__, 'flush_rewrite_rules' );
 
-// ── Egyszeri backfill: tpa_ar_szamitott meta a meglévő ajánlatokra ────────────
+// ── Egyszeri backfill: tpa_ar_szamitott + tpa_talalat_datuma a meglévőkre ─────
 // Az ár szerinti rendezés (shortcodes.php) a mentéskor frissülő számított árat
 // használja – a plugin-frissítés előtt mentett ajánlatokra itt pótoljuk be.
+// A találat dátumát a régi, már publikált ajánlatokra a publikálás napjával
+// pótoljuk (az első publikálás utólag nem rekonstruálható pontosabban).
 // Verzióváltásonként egyszer fut le (olcsó, amíg pár tucat ajánlat van).
 add_action( 'admin_init', function() {
     if ( get_option( 'tpa_ar_szamitott_verzio' ) === TPA_VERSION ) return;
@@ -51,6 +54,10 @@ add_action( 'admin_init', function() {
     ) );
     foreach ( $idk as $tpa_post_id ) {
         tpa_ar_szamitott_frissit( $tpa_post_id );
+        if ( get_post_status( $tpa_post_id ) === 'publish'
+            && get_post_meta( $tpa_post_id, 'tpa_talalat_datuma', true ) === '' ) {
+            update_post_meta( $tpa_post_id, 'tpa_talalat_datuma', get_the_date( 'Y-m-d', $tpa_post_id ) );
+        }
     }
     update_option( 'tpa_ar_szamitott_verzio', TPA_VERSION );
 } );
