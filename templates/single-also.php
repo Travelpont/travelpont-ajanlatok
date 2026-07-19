@@ -4,7 +4,8 @@
  *
  * Sorrend: galéria (a szállás képei közvetlenül a róla szóló szöveg után) →
  * teljes ár-panel + foglalás gombok (a döntési pont, minden infó birtokában) →
- * megosztás → úticél-ajánló → hasonló ajánlatok (zárás).
+ * megosztás → úticél-ajánló. (A hasonló ajánlatok az oldalsávban élnek:
+ * [travelpont_ajanlatok hasonlo="igen" oszlopok="1"] shortcode.)
  * A felső részt a single-content.php adja – a kettő a the_content szűrőben
  * ugyanabban a hatókörben fut, de ez a fájl önállóan is megállja a helyét.
  */
@@ -212,45 +213,10 @@ if ( $szallas_ar !== '' ) {
     <?php endif; ?>
 
     <?php
-    // ── Hasonló ajánlatok: ugyanarra az úticélra, ha nincs, a legfrissebbek ───
-    // Lejárt ajánlatnál különösen fontos: ne zsákutca legyen az oldal, hanem
-    // azonnal mutassuk a friss alternatívákat.
-    $hasonlo_args = array(
-        'post_type'      => 'ajanlat',
-        'post_status'    => 'publish',
-        'posts_per_page' => 3,
-        'post__not_in'   => array( $post_id ),
-        'orderby'        => 'date',
-        'order'          => 'DESC',
-        'meta_query'     => array( tpa_nem_lejart_meta_query() ),
-    );
-    if ( $uticel_id ) {
-        $hasonlo_args['meta_query'][] = array( 'key' => 'tpa_uticel', 'value' => (string) $uticel_id );
-    }
-    $hasonlo_query = new WP_Query( $hasonlo_args );
-
-    // Ha ugyanarra az úticélra nincs másik élő ajánlat, a legfrissebbeket mutatjuk.
-    if ( ! $hasonlo_query->have_posts() && $uticel_id ) {
-        array_pop( $hasonlo_args['meta_query'] );
-        $hasonlo_query = new WP_Query( $hasonlo_args );
-    }
-
-    if ( $hasonlo_query->have_posts() ) :
-        $tpa_single_id = $post_id; // a kártya-sablon felülírja a lokális változókat – a végén visszaállítjuk
+    // A "Hasonló ajánlatok" lapalji blokk 1.16.1-ben KIVEZETVE: a szerepét az
+    // oldalsávba tett [travelpont_ajanlatok hasonlo="igen" oszlopok="1"]
+    // shortcode vette át (azonos logika: aktuális kihagyva, azonos úticél
+    // előre, találat híján a legfrissebbek).
     ?>
-        <div class="tpa-hasonlo">
-            <h3 class="tpa-hasonlo-cim">
-                <?php echo $lejart ? 'Ez az ajánlat lejárt – nézd meg a frisseket:' : 'Hasonló ajánlatok'; ?>
-            </h3>
-            <div class="tpa-grid" style="--tpa-card-min: 240px;">
-                <?php while ( $hasonlo_query->have_posts() ) : $hasonlo_query->the_post(); ?>
-                    <?php include TPA_PATH . 'templates/card-template.php'; ?>
-                <?php endwhile; wp_reset_postdata(); ?>
-            </div>
-        </div>
-    <?php
-        $post_id = $tpa_single_id;
-    endif; ?>
-
     <?php do_action( 'tpa_single_doboz_vege', $post_id ); // bővítési pont ?>
 </div>

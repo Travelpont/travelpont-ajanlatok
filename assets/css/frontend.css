@@ -903,18 +903,6 @@
     border-color: #cbd5e1;
 }
 
-/* ── Hasonló ajánlatok sáv az aloldal alján ──────────────────────────────── */
-.tpa-hasonlo {
-    margin: 1.5rem 0 .5rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--tpa-card-border);
-}
-
-.tpa-hasonlo-cim {
-    margin: 0 0 1rem;
-    font-size: 1.2rem;
-}
-
 /* ── Úticél-ajánló doboz (az összekötött Úticél kedvcsinálója) ───────────── */
 .tpa-uticel-ajanlo {
     display: flex;

@@ -1,6 +1,12 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.16.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.16.1 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.16.1: a lapalji „Hasonló ajánlatok" blokk kivezetve a
+> `single-also.php`-ból [+ a `.tpa-hasonlo` CSS törölve] – a szerepét az
+> oldalsávba tett `[travelpont_ajanlatok hasonlo="igen" oszlopok="1"]`
+> shortcode vette át [Gabesz döntése]. FIGYELEM: az oldalsáv widget +
+> a Kadence oldalsáv-elrendezés beállítása kézi lépés a WP adminban –
+> amíg az nincs meg, az aloldalon nincs hasonló-ajánlat szekció.)
 > (1.16.0: a `[travelpont_ajanlatok]` shortcode oldalsáv-képes lett a
 > „További ajánlatok" sáv kiváltásához. Új `hasonlo="igen"` attribútum:
 > ajánlat-aloldalon az aktuális ajánlatot kihagyja [`post__not_in`], és az
