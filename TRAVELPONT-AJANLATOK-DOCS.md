@@ -1,6 +1,13 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.17.1 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.17.2 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.17.2: teljes szélig érő [edge-to-edge] mobil nézet az ajánlat-oldalon
+> [Gabesz kérése]: ≤600px-en a téma oldalsó térköze
+> [`.content-container.site-container` padding] és a kártya-keret
+> [`.entry.single-entry` box-shadow/radius] eltűnik, a fehér felület a
+> képernyő széléig fut; a szöveg az `entry-content-wrap` 1rem paddingjével
+> kap levegőt, a mobilon alulra kerülő oldalsáv [.primary-sidebar] 1rem
+> oldaltávot kap. A párja: travelpont-uticelok v1.20.4.)
 > (1.17.1: Playwright-os vizuális kör [1920/2560/mobil screenshotok alapján].
 > [1] Új `cim="auto"` shortcode-attribútum: a lista fölé egységes címsort ír
 > [`.tpa-lista-cim`, a lista-template rendereli] – hasonló-módban „További

@@ -1068,6 +1068,31 @@
    keretez – lásd .tpa-single-doboz) – itt már csak a keskeny kijelző
    speciális igazításai maradtak. */
 @media (max-width: 600px) {
+    /* Teljes szélig érő (edge-to-edge) mobil nézet: a téma oldalsó
+       térköze és a kártya-keret eltűnik, a fehér felület a képernyő
+       széléig fut – a szöveg az entry-content-wrap 1rem paddingjével
+       kap levegőt. CSAK az ajánlat-oldalon. */
+    .single-ajanlat .content-container.site-container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .single-ajanlat .content-area {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .single-ajanlat .entry.single-entry {
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    /* Az oldalsáv (mobilon a tartalom alatt) ne tapadjon a képernyő szélére */
+    .single-ajanlat .primary-sidebar {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
     /* A téma tartalom-kártyájának paddingje mérsékelve – CSAK az ajánlat-oldalon */
     .single-ajanlat .entry-content-wrap {
         padding: 1.25rem 1rem;
