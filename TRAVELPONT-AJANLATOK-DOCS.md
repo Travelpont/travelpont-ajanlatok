@@ -1,6 +1,20 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.16.1 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.17.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.17.0: KOMPAKT KÁRTYA + ÚTICÉL-MÓD az oldalsávokhoz. Új
+> `nezet="kompakt"` attribútum → `templates/card-kompakt.php`: borítókép
+> [16:9 marad, feliratos képkonvenció!] → cím → időpont [+ éj] → ár
+> ["234 870 Ft / 2 fő"] → egyetlen „Megnézem" gomb az ajánlat ALOLDALÁRA
+> [nem affiliate!]; ár-bontás, hely, találat/frissesség nincs; lejártnál
+> áthúzott ár + „Lejárt" badge a képen. Új `uticel="aktualis"` attribútum:
+> úticél-aloldalon a megnyitott úticél + ÖSSZES leszármazottja ajánlatai
+> [`tpu_get_leszarmazott_idk()` helperrel, function_exists-guarddal] –
+> találat híján NINCS fallback, helyette terelő szöveg linkkel az Ajánlatok
+> oldalra [`$tpa_ures_html` a lista-template-ben]. A két oldalsáv ajánlott
+> shortcode-jai a shortcodes.php fejlécében. Plusz: a teljes kártya
+> ár-bontás címkéi keskeny helyen nem törnek szó közepén
+> [flex-wrap + nowrap a címkén – az „Össze sen:" hiba javítása].
+> A párja: travelpont-uticelok v1.20.1 – a tartalmi ajánlat-blokk kivezetve.)
 > (1.16.1: a lapalji „Hasonló ajánlatok" blokk kivezetve a
 > `single-also.php`-ból [+ a `.tpa-hasonlo` CSS törölve] – a szerepét az
 > oldalsávba tett `[travelpont_ajanlatok hasonlo="igen" oszlopok="1"]`

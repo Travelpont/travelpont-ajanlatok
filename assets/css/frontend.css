@@ -269,9 +269,14 @@
 
 .tpa-card-ar-bontas li {
     display: flex;
+    flex-wrap: wrap; /* keskeny helyen az érték új sorba esik, a címke nem törik szóközepén */
     justify-content: space-between;
-    gap: 1rem;
+    gap: .15rem 1rem;
     margin: 0;
+}
+
+.tpa-card-ar-bontas li span:first-child {
+    white-space: nowrap;
 }
 
 .tpa-card-ar-bontas .tpa-card-ar-ertek {
@@ -343,6 +348,48 @@
 
 .tpa-card-uticel-link:hover {
     text-decoration: underline;
+}
+
+/* ── Kompakt kártya (oldalsávba: kép, cím, időpont, ár, Megnézem gomb) ──── */
+.tpa-card-kompakt .tpa-card-torzs {
+    padding: .85rem .95rem 1rem;
+    gap: .45rem;
+}
+
+.tpa-card-kompakt .tpa-card-cim {
+    font-size: 1rem;
+    line-height: 1.3;
+}
+
+.tpa-kkartya-idopont {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: .4rem;
+    font-size: .82rem;
+    color: var(--tpa-text-light);
+}
+
+.tpa-kkartya-idopont .tpa-icon {
+    align-self: center;
+}
+
+.tpa-kkartya-ar {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--tpa-primary);
+}
+
+.tpa-card-lejart .tpa-kkartya-ar {
+    opacity: .55;
+    text-decoration: line-through;
+}
+
+.tpa-kkartya-gomb {
+    width: 100%;
+    margin-top: .25rem;
+    box-sizing: border-box;
 }
 
 /* ── Gombok ─────────────────────────────────────────────────────────────── */

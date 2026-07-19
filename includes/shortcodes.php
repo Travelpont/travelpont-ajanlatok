@@ -14,6 +14,18 @@
  *                      előre (ha arra nincs élő ajánlat, a legfrissebbeket)
  *                      – oldalsávos "További ajánlatok" blokkhoz való.
  *                      Más oldalon nincs hatása.
+ *   uticel="nem"       "aktualis": úticél-aloldalon a megnyitott úticél ÉS
+ *                      az összes leszármazottja ajánlatait hozza (Ausztria →
+ *                      a schladmingi deal is). Találat híján nincs fallback,
+ *                      helyette terelő szöveg az Ajánlatok oldalra.
+ *                      Más oldalon nincs hatása.
+ *   nezet="teljes"     "kompakt": kis kártya oldalsávba – borítókép, cím,
+ *                      időpont, ár + "Megnézem" gomb az ajánlat aloldalára
+ *                      (nincs ár-bontás, foglalás-gombok, frissesség-sáv).
+ *
+ * Ajánlott oldalsáv-használat:
+ *   ajánlat-aloldal:  [travelpont_ajanlatok limit="3" hasonlo="igen" oszlopok="1" nezet="kompakt"]
+ *   úticél-aloldal:   [travelpont_ajanlatok limit="4" uticel="aktualis" oszlopok="1" nezet="kompakt"]
  *
  * A shortcode Elementorban (Shortcode widget), blokk-témában (Shortcode
  * blokk) és widget-területen (oldalsáv) is ugyanúgy használható.
@@ -29,6 +41,8 @@ function tpa_ajanlatok_shortcode( $atts ) {
         'lejartak' => 'nem',
         'oszlopok' => 3,
         'hasonlo'  => 'nem',
+        'uticel'   => 'nem',
+        'nezet'    => 'teljes',
     ) ), $atts, 'travelpont_ajanlatok' );
 
     $args = array(
@@ -36,6 +50,29 @@ function tpa_ajanlatok_shortcode( $atts ) {
         'post_status'    => 'publish',
         'posts_per_page' => (int) $atts['limit'],
     );
+
+    $tpa_ures_html = ''; // a lista-template üres-állapot felülírása (úticél-mód tölti)
+
+    // "Úticél" mód (az úticél-aloldal oldalsávjában): a megnyitott úticél ÉS az
+    // összes leszármazottja ajánlatai – ugyanaz a kör, mint a korábbi tartalmi
+    // "Ajánlataink ehhez az úticélhoz" blokké. Találat híján NINCS fallback
+    // (Ausztriánál egy görög deal zavaró lenne), helyette terelő szöveg.
+    if ( $atts['uticel'] === 'aktualis' && is_singular( 'uticel' ) ) {
+        $uticel_id  = get_queried_object_id();
+        $uticel_idk = array( $uticel_id );
+        if ( function_exists( 'tpu_get_leszarmazott_idk' ) ) {
+            $uticel_idk = array_merge( $uticel_idk, tpu_get_leszarmazott_idk( $uticel_id ) );
+        }
+        $args['meta_query'][] = array(
+            'key'     => 'tpa_uticel',
+            'value'   => array_map( 'strval', $uticel_idk ),
+            'compare' => 'IN',
+        );
+
+        $ures_link     = function_exists( 'tpk_ajanlatok_url' ) ? tpk_ajanlatok_url() : home_url( '/ajanlatok/' );
+        $tpa_ures_html = '<p class="tpa-empty">Ehhez az úticélhoz most nincs aktív ajánlatunk – <a href="'
+            . esc_url( $ures_link ) . '">nézd meg az összes ajánlatot</a>!</p>';
+    }
 
     // "Hasonló" mód (pl. az ajánlat-aloldal oldalsávjában): az épp nézett
     // ajánlat kimarad, és ha van bekötött úticél, az arra szóló élő ajánlatok

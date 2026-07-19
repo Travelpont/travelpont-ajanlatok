@@ -13,16 +13,24 @@ $oszlopok = max( 1, min( 4, (int) $tpa_atts['oszlopok'] ) );
 $min_szelesseg = array( 1 => '100%', 2 => '340px', 3 => '270px', 4 => '220px' );
 ?>
 
+<?php
+// Nézet: teljes kártya vagy kompakt (oldalsávba való) változat
+$kartya_sablon = ( isset( $tpa_atts['nezet'] ) && $tpa_atts['nezet'] === 'kompakt' )
+    ? 'templates/card-kompakt.php'
+    : 'templates/card-template.php';
+?>
 <?php if ( $tpa_query->have_posts() ) : ?>
     <div class="tpa-grid" style="--tpa-card-min: <?php echo esc_attr( $min_szelesseg[ $oszlopok ] ); ?>;">
         <?php
         while ( $tpa_query->have_posts() ) :
             $tpa_query->the_post();
-            include TPA_PATH . 'templates/card-template.php';
+            include TPA_PATH . $kartya_sablon;
         endwhile;
         wp_reset_postdata();
         ?>
     </div>
+<?php elseif ( ! empty( $tpa_ures_html ) ) : ?>
+    <?php echo $tpa_ures_html; // biztonságosan épített HTML (shortcodes.php, esc_url) ?>
 <?php else : ?>
     <p class="tpa-empty"><?php echo esc_html( apply_filters( 'tpa_ures_lista_szoveg', 'Jelenleg nincs aktív ajánlat – nézz vissza hamarosan! 🧳' ) ); ?></p>
 <?php endif; ?>
