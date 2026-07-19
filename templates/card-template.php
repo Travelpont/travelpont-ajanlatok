@@ -100,16 +100,18 @@ if ( ! $kartya_uticel_post || $kartya_uticel_post->post_type !== 'uticel' || $ka
             <?php
             // Részár-sorok csak akkor, ha legalább 2 tétel van – egytételes
             // bontás (pl. csak szállás) csak duplázná az Összesen sort.
+            // LEJÁRTNÁL jellemzően a repjegy/buszjegy akciós ára jár le, ezért
+            // csak az utazási sor és az Összesen húzódik át – a szállás ára marad.
             $ket_tetel = ( $utazas['ar'] !== '' && $szallas_ar !== '' );
             ?>
             <?php if ( $utazas['ar'] !== '' || $szallas_ar !== '' || $ar !== '' ) : ?>
                 <ul class="tpa-card-ar-bontas">
                     <?php if ( $ket_tetel ) : ?>
-                        <li><span><?php echo esc_html( $utazas['cimke'] ); ?>:</span><span class="tpa-card-ar-ertek"><?php echo esc_html( tpa_ar_format( $utazas['ar'] ) ); ?>/fő</span></li>
+                        <li<?php echo $deal_lejart ? ' class="tpa-ar-athuzva"' : ''; ?>><span><?php echo esc_html( $utazas['cimke'] ); ?>:</span><span class="tpa-card-ar-ertek"><?php echo esc_html( tpa_ar_format( $utazas['ar'] ) ); ?>/fő</span></li>
                         <li><span>Szállás:</span><span class="tpa-card-ar-ertek"><?php echo esc_html( tpa_ar_format( $szallas_ar ) ); ?></span></li>
                     <?php endif; ?>
                     <?php if ( $ar !== '' ) : ?>
-                        <li class="tpa-card-ar-osszesen<?php echo $ket_tetel ? '' : ' tpa-card-ar-osszesen-egyedul'; ?>"><span>Összesen:</span><span class="tpa-card-ar-ertek"><?php echo esc_html( tpa_ar_format( $ar ) ); ?> / <?php echo esc_html( $fo_szam ); ?> fő</span></li>
+                        <li class="tpa-card-ar-osszesen<?php echo $ket_tetel ? '' : ' tpa-card-ar-osszesen-egyedul'; ?><?php echo $deal_lejart ? ' tpa-ar-athuzva' : ''; ?>"><span>Összesen:</span><span class="tpa-card-ar-ertek"><?php echo esc_html( tpa_ar_format( $ar ) ); ?> / <?php echo esc_html( $fo_szam ); ?> fő</span></li>
                     <?php endif; ?>
                 </ul>
             <?php endif; ?>
@@ -126,10 +128,19 @@ if ( ! $kartya_uticel_post || $kartya_uticel_post->post_type !== 'uticel' || $ka
 
             <div class="tpa-card-gombok">
                 <?php if ( $deal_lejart ) : ?>
-                    <?php $aktualis_link = $utazas_link !== '' ? $utazas_link : $szallas_link; ?>
+                    <?php
+                    // Jellemzően az utazási (repjegy/busz) ár jár le – az a gomb vált
+                    // "aktuális ár" ellenőrzésre, a szállás normál foglalás marad.
+                    // Csak-szállás dealnél a szállás link az ellenőrző.
+                    $aktualis_link = $utazas_link !== '' ? $utazas_link : $szallas_link;
+                    ?>
                     <?php if ( $aktualis_link !== '' ) : ?>
                         <a class="tpa-gomb tpa-gomb-repjegy" href="<?php echo esc_url( $aktualis_link ); ?>"
                            target="_blank" rel="nofollow sponsored noopener">Nézd meg az aktuális árat</a>
+                    <?php endif; ?>
+                    <?php if ( $utazas_link !== '' && $szallas_link !== '' ) : ?>
+                        <a class="tpa-gomb" href="<?php echo esc_url( $szallas_link ); ?>"
+                           target="_blank" rel="nofollow sponsored noopener">Szállás foglalása</a>
                     <?php endif; ?>
                     <?php if ( $kartya_uticel_post ) : ?>
                         <a class="tpa-card-uticel-link" href="<?php echo esc_url( get_permalink( $kartya_uticel_post ) ); ?>">Nézd meg: <?php echo esc_html( get_the_title( $kartya_uticel_post ) ); ?></a>

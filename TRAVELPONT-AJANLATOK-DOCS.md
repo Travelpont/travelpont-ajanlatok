@@ -1,6 +1,19 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.15.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.15.1 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.15.1: Gabesz screenshot-visszajelzése alapján. [1] LEJÁRT-LOGIKA
+> PONTOSÍTÁS: jellemzően a repjegy/buszjegy akciós ára jár le, a szállásé
+> nem – lejáratkor csak az UTAZÁSI sor és az Összesen húzódik át
+> [`.tpa-ar-athuzva` a sorokon, a blanket áthúzás kivezetve], a szállás
+> sora érintetlen; a gombok lejáratkor: „Nézd meg az aktuális árat"
+> [utazási link] MELLETT megmarad a normál „Szállás foglalása" gomb is,
+> az aloldalon magyarázó sorral [„A repülőjegy akciós ára járt le – a
+> szállás továbbra is foglalható", `.tpa-lejart-reszinfo`]. Csak-szállás
+> dealnél a szállás sor húzódik át és a szállás link az ellenőrző gomb.
+> [2] A plugin-doboz MINDEN kijelzőn keret nélküli [eddig csak mobilon]:
+> a leírás így nem két keretezett kártya közé "esik ki", hanem egy
+> folyamatos hasáb része – a hero lekerekítése teljes körű lett, a
+> mobil-blokk kisimító szabályai a base-be olvadtak.)
 > (1.15.0: ALOLDAL UX-ÁTRENDEZÉS – a doboz kettévált, a leírás felkerült a
 > törzsbe. Történet-sorrend: kedvcsinálás → részletek → döntés → alternatívák.
 > FELSŐ rész [`single-content.php`, a leírás ELÉ]: lejárt-jelzés → hero →

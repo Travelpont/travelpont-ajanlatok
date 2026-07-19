@@ -26,19 +26,29 @@ $szallas_link  = tpa_mezo( $post_id, 'tpa_szallas_link' );
 $platform_nev  = tpa_szallas_platform_nev( $post_id );
 $lejart        = tpa_deal_lejart( $post_id ); // kézi "Lejárt" státusz VAGY érvényességi dátum
 
+$van_utazas  = ( $utazas['cimke'] !== '' );                  // van-e utazási komponens (nem csak-szállás)
+$utazas_link = $kiwi_link ? $kiwi_link : $busz_link;
+
 // Ár-bontás sorai: a repjegy/buszjegy mező FŐNKÉNTI árat tárol, itt a fő-számmal
 // felszorzott tétel szerepel, hogy a sorok összege kiadja a végösszeget.
 // Csak akkor rajzoljuk ki, ha legalább 2 tétel van.
+// A 3. elem: áthúzandó-e lejáratkor – jellemzően az UTAZÁSI ár jár le, a
+// szállásé nem; csak-szállás dealnél értelemszerűen a szállás sor húzódik át.
 $ar_reszek = array();
 if ( $utazas['ar'] !== '' ) {
     $utazas_cimke = $utazas['cimke'] === 'Buszjegy' ? 'Buszjegy' : 'Repülőjegy';
     $ar_reszek[] = array(
         $utazas_cimke . ' (oda-vissza, ' . $fo_szam . ' fő)',
         (float) $utazas['ar'] * $fo_szam,
+        $lejart,
     );
 }
 if ( $szallas_ar !== '' ) {
-    $ar_reszek[] = array( 'Szállás' . ( $ejszakak !== '' ? ' (' . $ejszakak . ' éj)' : '' ), $szallas_ar );
+    $ar_reszek[] = array(
+        'Szállás' . ( $ejszakak !== '' ? ' (' . $ejszakak . ' éj)' : '' ),
+        $szallas_ar,
+        $lejart && ! $van_utazas,
+    );
 }
 ?>
 <div class="tpa-single-doboz tpa-single-also">
@@ -71,7 +81,7 @@ if ( $szallas_ar !== '' ) {
             <?php if ( $ar !== '' && count( $ar_reszek ) >= 2 ) : ?>
                 <ul class="tpa-single-ar-bontas">
                     <?php foreach ( $ar_reszek as $ar_resz ) : ?>
-                        <li><span><?php echo esc_html( $ar_resz[0] ); ?></span><span><?php echo esc_html( tpa_ar_format( $ar_resz[1] ) ); ?></span></li>
+                        <li<?php echo ! empty( $ar_resz[2] ) ? ' class="tpa-ar-athuzva"' : ''; ?>><span><?php echo esc_html( $ar_resz[0] ); ?></span><span><?php echo esc_html( tpa_ar_format( $ar_resz[1] ) ); ?></span></li>
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
@@ -101,15 +111,25 @@ if ( $szallas_ar !== '' ) {
 
             <?php if ( $lejart ) : ?>
                 <?php
-                // Lejárt deal: az árak halványítva (CSS), egyetlen gomb az
-                // aktuális ár ellenőrzésére – a kártya-viselkedéssel egyezően.
-                $utazas_link   = $kiwi_link ? $kiwi_link : $busz_link;
+                // Lejárt deal: jellemzően az UTAZÁSI (repjegy/busz) ár járt le –
+                // az halványítva/áthúzva, gombja "aktuális ár" ellenőrzésre vált;
+                // a szállás ára és foglalás-gombja változatlanul él.
+                // Csak-szállás dealnél a szállás link az ellenőrző gomb.
                 $aktualis_link = $utazas_link ? $utazas_link : $szallas_link;
                 ?>
-                <?php if ( $aktualis_link ) : ?>
+                <?php if ( $van_utazas && $szallas_link ) : ?>
+                    <p class="tpa-lejart-reszinfo">A <?php echo $utazas['cimke'] === 'Buszjegy' ? 'buszjegy' : 'repülőjegy'; ?> akciós ára járt le – a szállás továbbra is foglalható.</p>
+                <?php endif; ?>
+                <?php if ( $aktualis_link || ( $van_utazas && $szallas_link ) ) : ?>
                     <div class="tpa-single-gombok">
-                        <a class="tpa-gomb tpa-gomb-repjegy" href="<?php echo esc_url( $aktualis_link ); ?>"
-                           target="_blank" rel="nofollow sponsored noopener">Nézd meg az aktuális árat</a>
+                        <?php if ( $aktualis_link ) : ?>
+                            <a class="tpa-gomb tpa-gomb-repjegy" href="<?php echo esc_url( $aktualis_link ); ?>"
+                               target="_blank" rel="nofollow sponsored noopener">Nézd meg az aktuális árat</a>
+                        <?php endif; ?>
+                        <?php if ( $van_utazas && $utazas_link && $szallas_link ) : ?>
+                            <a class="tpa-gomb tpa-gomb-szallas" href="<?php echo esc_url( $szallas_link ); ?>"
+                               target="_blank" rel="nofollow sponsored noopener">🏨 Szállás foglalása<?php echo $platform_nev ? ' – ' . esc_html( $platform_nev ) : ''; ?></a>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
             <?php elseif ( $kiwi_link || $busz_link || $szallas_link ) : ?>
@@ -117,8 +137,7 @@ if ( $szallas_ar !== '' ) {
                 // Kétgombos (utazás + szállás) ajánlatnál a gombok számozott
                 // lépésekké válnak – így a vendég látja, hogy a foglalás két külön
                 // helyen történik, és mindkettőt innen érdemes indítania.
-                $utazas_link = $kiwi_link ? $kiwi_link : $busz_link;
-                $ket_lepes   = ( $utazas_link && $szallas_link );
+                $ket_lepes = ( $utazas_link && $szallas_link );
                 ?>
                 <div class="tpa-single-gombok<?php echo $ket_lepes ? ' tpa-gombok-lepesek' : ''; ?>">
                     <?php if ( $kiwi_link ) : ?>

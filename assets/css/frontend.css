@@ -313,15 +313,8 @@
     padding: .45rem .6rem;
 }
 
-/* Lejárt deal: árak halványítva + áthúzva, barátságos üzenettel */
-.tpa-card-lejart .tpa-card-ar-bontas {
-    opacity: .55;
-}
-
-.tpa-card-lejart .tpa-card-ar-ertek {
-    text-decoration: line-through;
-}
-
+/* Lejárt deal a kártyán: az áthúzást a sorokra tett .tpa-ar-athuzva osztály
+   végzi (utazás + Összesen sor – a szállás ára érintetlen marad) */
 .tpa-card-lejart-uzenet {
     margin: 0;
     font-size: .82rem;
@@ -375,13 +368,11 @@
 /* ── Aloldali ajánlat-doboz ─────────────────────────────────────────────── */
 /* Két részre válik: .tpa-single-felso a leírás ELŐTT (hero, kompakt ár,
    tény-sáv, "miért szuper"), .tpa-single-also a leírás UTÁN (galéria,
-   ár-panel + gombok, megosztás, úticél-ajánló, hasonló ajánlatok). */
+   ár-panel + gombok, megosztás, úticél-ajánló, hasonló ajánlatok).
+   NINCS saját keret/háttér: a téma (Kadence) tartalom-kártyája keretez, a
+   plugin dobozai átlátszóak – így a köztük ülő leírás nem "esik ki" két
+   keretezett kártya közé, hanem egy folyamatos hasáb része (2026-07-19). */
 .tpa-single-doboz {
-    background: var(--tpa-card-bg);
-    border: 1px solid var(--tpa-card-border);
-    border-radius: var(--tpa-radius);
-    box-shadow: var(--tpa-shadow);
-    padding: 1.5rem;
     margin: 0 0 2rem;
 }
 
@@ -399,14 +390,14 @@
     font-weight: 600;
 }
 
-/* ── Hero kép (kiemelt kép, doboz-szélig kifutva) ───────────────────────── */
+/* ── Hero kép (kiemelt kép) ─────────────────────────────────────────────── */
 .tpa-single-hero {
-    margin: -1.5rem -1.5rem 1.25rem;
+    margin: 0 0 1.25rem;
     /* 16:9 – a feliratos borítókép natív aránya (lásd .tpa-card-kep).
        Korábban 21/8 volt, ami levágta a képbe szerkesztett feliratot. */
     aspect-ratio: 16 / 9;
     overflow: hidden;
-    border-radius: var(--tpa-radius) var(--tpa-radius) 0 0;
+    border-radius: var(--tpa-radius);
     background: #e0f2fe;
 }
 
@@ -597,15 +588,32 @@
     margin: 0 0 1.5rem;
 }
 
-/* Lejárt deal ár-panelje: az árak halványítva + áthúzva (a kártyával egyezően) */
-.tpa-ar-lejart .tpa-single-ar-bontas,
+/* Lejárt deal: jellemzően az UTAZÁSI ár jár le – csak a megjelölt sorok
+   (.tpa-ar-athuzva: utazás + Összesen) halványodnak/húzódnak át, a szállás
+   sora és gombja érintetlen. Kártyán és aloldalon közös osztály. */
+.tpa-ar-athuzva {
+    opacity: .55;
+}
+
+.tpa-ar-athuzva span:last-child {
+    text-decoration: line-through;
+}
+
+/* Az összesített ár-blokk (nagy szám) lejáratkor szintén áthúzva */
 .tpa-ar-lejart .tpa-single-ar-blokk {
     opacity: .55;
 }
 
-.tpa-ar-lejart .tpa-single-ar,
-.tpa-ar-lejart .tpa-single-ar-bontas li span:last-child {
+.tpa-ar-lejart .tpa-single-ar {
     text-decoration: line-through;
+}
+
+/* "A repülőjegy akciós ára járt le…" magyarázó sor a gombok fölött */
+.tpa-lejart-reszinfo {
+    margin: 0 0 .9rem;
+    font-size: .85rem;
+    color: var(--tpa-text-light);
+    line-height: 1.5;
 }
 
 /* Ár-bontás (repjegy/busz/szállás tételsorok a végösszeg fölött) */
@@ -998,12 +1006,10 @@
     }
 }
 
-/* ═══ Mobil: az aloldal kitöltse a keskeny kijelzőt (v1.13.1) ═════════════
-   A téma (Kadence) a bejegyzést amúgy is fehér kártyába teszi belső
-   paddinggel – ezen belül a plugin saját keretezett doboza csak a helyet
-   ette (a ~412px-es kijelzőből ~250px maradt a tartalomnak, szavak törtek
-   ketté). Mobilon ezért a plugin-dobozt kisimítjuk, a chipeket teljes
-   szélességű sorokká alakítjuk. */
+/* ═══ Mobil finomítások az aloldalon (v1.13.1, v1.15.1-ben karcsúsítva) ═══
+   A plugin-doboz 1.15.1 óta MINDEN kijelzőn keret nélküli (a téma kártyája
+   keretez – lásd .tpa-single-doboz) – itt már csak a keskeny kijelző
+   speciális igazításai maradtak. */
 @media (max-width: 600px) {
     /* A téma tartalom-kártyájának paddingje mérsékelve – CSAK az ajánlat-oldalon */
     .single-ajanlat .entry-content-wrap {
@@ -1014,18 +1020,6 @@
     .single-ajanlat h1.entry-title {
         font-size: 1.6rem;
         line-height: 1.25;
-    }
-
-    .tpa-single-doboz {
-        padding: 0;
-        border: none;
-        box-shadow: none;
-        background: transparent;
-    }
-
-    .tpa-single-hero {
-        margin: 0 0 1rem;
-        border-radius: 12px;
     }
 
     /* Kompakt ár-sor: mobilon az összeg és a gomb egymás alá kerül */
