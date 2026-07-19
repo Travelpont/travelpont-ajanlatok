@@ -1,6 +1,12 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.18.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.18.1 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.18.1: a kártya helyszín-sora a teljes morzsalánc
+> [„Spanyolország › Katalónia › Barcelona"] helyett „Város, Ország"
+> formátumot kap [„Barcelona, Spanyolország"] — a tpa_hely_megjelenites()
+> fallback-ága változott: úticél címe + legfelső ős [ország], ország/régió
+> szintű úticélnál csak a saját név. A kézi Célállomás-felirat továbbra is
+> felülír; a single oldal kattintható morzsamenüje változatlan.)
 > (1.18.0: LISTA-KÁRTYA KARCSÚSÍTÁS [Gabesz döntése: a kártya dolga a
 > figyelemfelkeltés, a foglalás az aloldalon történik]. A card-template.php-ról
 > lekerült: ár-bontás sorok [repjegy/szállás – csak az „Összesen: X Ft / N fő"

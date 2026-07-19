@@ -557,16 +557,32 @@ function tpa_uticel_breadcrumb( $uticel_id, $args = array() ) {
     return implode( $linkelt ? '<span class="tpa-morzsa-sep">' . esc_html( $elvalaszto ) . '</span>' : $elvalaszto, $reszek );
 }
 
-// ── Az ajánlat "hol" megjelenítése (kártya, kezdőlap-modul, REST) ──────────────
-// Prioritás: a kézzel írt tpa_celallomas felülír; ha üres, az összekötött úticél
-// morzsamenüje (nyers breadcrumb-string). Így a meglévő, kézi célállomású
-// ajánlatok változatlanok, az új workflow-ban viszont elég az úticélt bekötni.
-// NYERS szöveget ad vissza – a hívó felel az escape-elésért (esc_html).
+// ── Az ajánlat "hol" megjelenítése (kártya) ───────────────────────────────────
+// Prioritás: a kézzel írt tpa_celallomas felülír; ha üres, az összekötött
+// úticélból "Város, Ország" formátum (pl. "Barcelona, Spanyolország") – a
+// teljes morzsalánc a kártyán zajos volt, az a single oldal morzsamenüjéé.
+// Ország/régió szintű úticélnál csak a saját neve. Így a meglévő, kézi
+// célállomású ajánlatok változatlanok, az új workflow-ban elég az úticélt
+// bekötni. NYERS szöveget ad vissza – a hívó felel az escape-elésért.
 function tpa_hely_megjelenites( $post_id ) {
     $celallomas = tpa_mezo( $post_id, 'tpa_celallomas' );
     if ( $celallomas !== '' ) return $celallomas;
 
-    return tpa_uticel_breadcrumb( tpa_mezo( $post_id, 'tpa_uticel' ) );
+    $uticel_id = absint( tpa_mezo( $post_id, 'tpa_uticel' ) );
+    if ( ! $uticel_id ) return '';
+
+    $uticel = get_post( $uticel_id );
+    if ( ! $uticel || $uticel->post_type !== 'uticel' ) return '';
+
+    $cim  = get_the_title( $uticel_id );
+    $osok = get_post_ancestors( $uticel_id ); // közvetlen szülő → ... → legfelső ős
+    if ( $osok ) {
+        $orszag = get_the_title( end( $osok ) ); // a legfelső ős az ország
+        if ( $orszag !== '' && $orszag !== $cim ) {
+            return $cim . ', ' . $orszag;
+        }
+    }
+    return $cim;
 }
 
 // ── Lejárt-e az ajánlat? ──────────────────────────────────────────────────────

@@ -11,7 +11,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 $post_id       = get_the_ID();
-$hely          = tpa_hely_megjelenites( $post_id ); // kézi célállomás VAGY úticél-morzsamenü (nyers)
+$hely          = tpa_hely_megjelenites( $post_id ); // kézi célállomás VAGY "Város, Ország" az úticélból (nyers)
 $indulas       = tpa_mezo( $post_id, 'tpa_indulas' );
 $idopont       = tpa_idopont_megjelenites( $post_id );  // dátumokból képzett tartomány vagy kézi szöveg
 $ejszakak      = tpa_ejszakak_szam( $post_id );         // dátumokból számolva vagy kézi érték
