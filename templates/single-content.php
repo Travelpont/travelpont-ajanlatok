@@ -54,7 +54,7 @@ $van_szallas_adat = ( $szallas_nev !== '' || $csillagok !== '' || $ellatas !== '
     <?php if ( ! $lejart && $ar !== '' ) : ?>
         <div class="tpa-kompakt-ar">
             <div class="tpa-kompakt-ar-blokk">
-                <span class="tpa-kompakt-ar-osszeg"><?php echo esc_html( tpa_ar_format( $ar ) ); ?></span>
+                <span class="tpa-kompakt-ar-osszeg"><?php echo esc_html( tpa_osszeg_format( $post_id, $ar ) ); ?></span>
                 <?php if ( $ar_megjegyzes ) : ?>
                     <span class="tpa-kompakt-ar-megjegyzes"><?php echo esc_html( $ar_megjegyzes ); ?></span>
                 <?php endif; ?>

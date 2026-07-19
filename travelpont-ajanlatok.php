@@ -3,7 +3,7 @@
  * Plugin Name: Travelpont Ajánlatok
  * Plugin URI:  https://travelpont.hu
  * Description: Repülő-, busz- vagy csak szállás-ajánlatok kezelése és kártyás megjelenítése – ACF-mentes, önálló plugin, az aktivbalaton.hu plugin-konvenciók mintájára.
- * Version:     1.18.1
+ * Version:     1.19.0
  * Author:      travelpont.hu
  * Text Domain: travelpont-ajanlatok
  */

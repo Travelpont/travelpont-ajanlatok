@@ -1,6 +1,17 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.18.1 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.19.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.19.0: „FT-TÓL" ÁR [Gabesz döntése: alapból MINDIG „-tól", mert az árak
+> és a szállás-opciók változnak — védelem + a linkeken drágább opciók is
+> vannak]. Új mező: `tpa_ar_tol` select [default 'tol'; 'pontos' = fix áras
+> deal, kikapcsolja]. Új helperek: `tpa_ar_tol_e()` + `tpa_osszeg_format()`
+> [ár + „-tól" toldalék; mindig „Ft-tól", mert a forint hátulhangrendű].
+> CSAK az összár kapja meg — a részár-sorok (repjegy/szállás) pontos talált
+> árak maradnak, azokat az „Árak ellenőrizve" dátum fedi. Alkalmazva:
+> lista-kártya, kompakt kártya, single kompakt ár-sor + ár-panel +
+> megosztás-szöveg, REST ar_format. A meta nélküli régi ajánlatok
+> automatikusan „-tól"-t írnak. Párja: kezdolap v1.10.1, Portal-szerkesztő
+> „Ár kiírása" select.)
 > (1.18.1: a kártya helyszín-sora a teljes morzsalánc
 > [„Spanyolország › Katalónia › Barcelona"] helyett „Város, Ország"
 > formátumot kap [„Barcelona, Spanyolország"] — a tpa_hely_megjelenites()

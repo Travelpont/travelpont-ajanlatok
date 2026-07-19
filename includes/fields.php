@@ -198,6 +198,17 @@ function tpa_get_fields() {
             'placeholder' => 'pl. 290900',
             'desc'        => 'Az ajánlat aloldalán megjelenő teljes ár. Ha üresen hagyod, a repjegy + szállás ár összegét használjuk.',
         ),
+        'tpa_ar_tol' => array(
+            'label'   => 'Ár kiírása',
+            'type'    => 'select',
+            'section' => 'ar',
+            'options' => array(
+                'tol'    => '„Ft-tól” ár (alapértelmezett – az árak változhatnak)',
+                'pontos' => 'Pontos ár (fix áras deal)',
+            ),
+            'default' => 'tol',
+            'desc'    => 'Alapból minden összár „Ft-tól” toldalékot kap (az árak és a szállás-opciók folyamatosan változnak – így le vagyunk védve). Csak akkor válts pontosra, ha tényleg fix áras a találat.',
+        ),
         'tpa_ar_megjegyzes' => array(
             'label'       => 'Ár megjegyzés',
             'type'        => 'text',
@@ -318,6 +329,21 @@ function tpa_mezo( $post_id, $key ) {
 function tpa_ar_format( $ar ) {
     if ( $ar === '' || $ar === null ) return '';
     return number_format( (float) $ar, 0, ',', ' ' ) . ' Ft';
+}
+
+// ── "-tól" áras-e az ajánlat? (alapértelmezés: IGEN – az árak változnak) ─────
+// A tpa_ar_tol mező 'pontos' értéke kapcsolja ki; üres/hiányzó meta = "-tól",
+// így a mező bevezetése előtti ajánlatok is automatikusan "-tól" árat írnak.
+function tpa_ar_tol_e( $post_id ) {
+    return tpa_mezo( $post_id, 'tpa_ar_tol' ) !== 'pontos';
+}
+
+// ── Az ÖSSZÁR kiírása: "562 275 Ft-tól" vagy (fix árnál) "562 275 Ft" ────────
+// Csak az összesen árra való – a részár-sorok (repjegy/szállás) pontos,
+// talált árak maradnak, azokat az "Árak ellenőrizve" dátum fedi.
+function tpa_osszeg_format( $post_id, $ar ) {
+    if ( $ar === '' || $ar === null ) return '';
+    return tpa_ar_format( $ar ) . ( tpa_ar_tol_e( $post_id ) ? '-tól' : '' );
 }
 
 // ── Hány főre szól az ajánlat (default 2, minimum 1) ─────────────────────────

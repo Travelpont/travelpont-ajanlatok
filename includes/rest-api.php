@@ -165,7 +165,7 @@ function tpa_api_format( $post_id ) {
         'uticel_title'      => $uticel_title,
         'uticel_breadcrumb' => $uticel_breadcrumb,
         'ar_szamitott'    => $ar_szamitott,
-        'ar_format'       => $ar_szamitott !== '' ? tpa_ar_format( $ar_szamitott ) : '',
+        'ar_format'       => $ar_szamitott !== '' ? tpa_osszeg_format( $post_id, $ar_szamitott ) : '',
         'idopont_megjelenites' => tpa_idopont_megjelenites( $post_id ), // dátumokból képzett kiírás (vagy kézi szöveg)
         'ejszakak_szam'        => tpa_ejszakak_szam( $post_id ),         // dátumokból számolt éjszakák (vagy kézi érték)
         'ar_megjegyzes_megjelenites' => tpa_ar_megjegyzes_megjelenites( $post_id ),

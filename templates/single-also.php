@@ -89,7 +89,7 @@ if ( $szallas_ar !== '' ) {
 
             <?php if ( $ar !== '' ) : ?>
                 <div class="tpa-single-ar-blokk">
-                    <span class="tpa-single-ar"><?php echo esc_html( tpa_ar_format( $ar ) ); ?></span>
+                    <span class="tpa-single-ar"><?php echo esc_html( tpa_osszeg_format( $post_id, $ar ) ); ?></span>
                     <?php if ( $ar_megjegyzes ) : ?>
                         <span class="tpa-single-ar-megjegyzes"><?php echo esc_html( $ar_megjegyzes ); ?></span>
                     <?php endif; ?>
@@ -170,7 +170,7 @@ if ( $szallas_ar !== '' ) {
     <?php
     // ── "Küldd el az útitársadnak" – megosztás (az utazásról párban döntenek) ──
     $megoszt_url   = get_permalink( $post_id );
-    $megoszt_szoveg = get_the_title( $post_id ) . ( $ar !== '' ? ' – ' . tpa_ar_format( $ar ) : '' );
+    $megoszt_szoveg = get_the_title( $post_id ) . ( $ar !== '' ? ' – ' . tpa_osszeg_format( $post_id, $ar ) : '' );
     ?>
     <div class="tpa-megosztas">
         <span class="tpa-megosztas-cimke"><?php echo tpa_icon( 'share' ); ?>Küldd el az útitársadnak:</span>

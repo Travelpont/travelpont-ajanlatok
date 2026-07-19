@@ -61,7 +61,7 @@ $elso_kategoria = ( $kategoriak && ! is_wp_error( $kategoriak ) ) ? current( $ka
         <?php endif; ?>
 
         <?php if ( $ar !== '' ) : ?>
-            <p class="tpa-kkartya-ar"><?php echo esc_html( tpa_ar_format( $ar ) . ' / ' . $fo_szam . ' fő' ); ?></p>
+            <p class="tpa-kkartya-ar"><?php echo esc_html( tpa_osszeg_format( $post_id, $ar ) . ' / ' . $fo_szam . ' fő' ); ?></p>
         <?php endif; ?>
 
         <a class="tpa-gomb tpa-kkartya-gomb" href="<?php the_permalink(); ?>">Megnézem</a>

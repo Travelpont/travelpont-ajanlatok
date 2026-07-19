@@ -77,7 +77,7 @@ $elso_kategoria = ( $kategoriak && ! is_wp_error( $kategoriak ) ) ? current( $ka
         <div class="tpa-card-lablec tpa-card-lablec-deal">
             <?php if ( $ar !== '' ) : ?>
                 <ul class="tpa-card-ar-bontas">
-                    <li class="tpa-card-ar-osszesen tpa-card-ar-osszesen-egyedul<?php echo $deal_lejart ? ' tpa-ar-athuzva' : ''; ?>"><span>Összesen:</span><span class="tpa-card-ar-ertek"><?php echo esc_html( tpa_ar_format( $ar ) ); ?> / <?php echo esc_html( $fo_szam ); ?> fő</span></li>
+                    <li class="tpa-card-ar-osszesen tpa-card-ar-osszesen-egyedul<?php echo $deal_lejart ? ' tpa-ar-athuzva' : ''; ?>"><span>Összesen:</span><span class="tpa-card-ar-ertek"><?php echo esc_html( tpa_osszeg_format( $post_id, $ar ) ); ?> / <?php echo esc_html( $fo_szam ); ?> fő</span></li>
                 </ul>
             <?php endif; ?>
 
