@@ -1,6 +1,17 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.15.1 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.16.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.16.0: a `[travelpont_ajanlatok]` shortcode oldalsáv-képes lett a
+> „További ajánlatok" sáv kiváltásához. Új `hasonlo="igen"` attribútum:
+> ajánlat-aloldalon az aktuális ajánlatot kihagyja [`post__not_in`], és az
+> azonos úticélra szóló élő ajánlatokat hozza előre [nevesített
+> `tpa_hasonlo_uticel` meta_query-kulcs]; ha arra nincs találat, a szűkítés
+> elengedve a legfrissebbeket adja – pontosan a lapalji hasonló-blokk
+> logikája. Más oldalon az attribútumnak nincs hatása. Új `oszlopok="1"`
+> érték: mindig egy hasáb [minmax(100%, 1fr)], oldalsávba. Ajánlott
+> oldalsáv-használat: `[travelpont_ajanlatok limit="3" hasonlo="igen"
+> oszlopok="1"]` egy Shortcode blokkban/widgetben. A lapalji hasonló-blokk
+> egyelőre MARAD – ha az oldalsáv élesben bevált, onnan kivezethető.)
 > (1.15.1: Gabesz screenshot-visszajelzése alapján. [1] LEJÁRT-LOGIKA
 > PONTOSÍTÁS: jellemzően a repjegy/buszjegy akciós ára jár le, a szállásé
 > nem – lejáratkor csak az UTAZÁSI sor és az Összesen húzódik át

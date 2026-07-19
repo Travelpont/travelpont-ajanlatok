@@ -6,10 +6,11 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-$oszlopok = max( 2, min( 4, (int) $tpa_atts['oszlopok'] ) );
+$oszlopok = max( 1, min( 4, (int) $tpa_atts['oszlopok'] ) );
 // Az oszlopszámot a kártyák minimális szélességén keresztül érjük el,
 // így mobilon automatikusan egymás alá rendeződnek.
-$min_szelesseg = array( 2 => '340px', 3 => '270px', 4 => '220px' );
+// Az 1 oszlop (100% minimum) mindig egy hasáb – oldalsávba való.
+$min_szelesseg = array( 1 => '100%', 2 => '340px', 3 => '270px', 4 => '220px' );
 ?>
 
 <?php if ( $tpa_query->have_posts() ) : ?>
