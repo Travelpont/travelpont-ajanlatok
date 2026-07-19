@@ -1,6 +1,23 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.14.1 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.15.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.15.0: ALOLDAL UX-ÁTRENDEZÉS – a doboz kettévált, a leírás felkerült a
+> törzsbe. Történet-sorrend: kedvcsinálás → részletek → döntés → alternatívák.
+> FELSŐ rész [`single-content.php`, a leírás ELÉ]: lejárt-jelzés → hero →
+> morzsa → KOMPAKT ÁR-SOR [`.tpa-kompakt-ar`: összesen ár + „Foglalás ↓"
+> gomb, ami a `#tpa-foglalas` horgonyra görget] → TÉNY-SÁV [`.tpa-teny-sav`:
+> a 8 egyenrangú chip helyett két címzett csoport, Utazás (útvonal/időpont/
+> éjszakák/poggyász) és Szállás (név+csillag/ellátás); az „Úti cél" sor csak
+> morzsa híján jelenik meg – a hármas hely-duplikáció megszűnt; az „Érvényes"
+> az ár-panel apróbetűjébe költözött] → „Miért szuper?". ALSÓ rész [ÚJ
+> `single-also.php`, a leírás MÖGÉ]: galéria [a szállás képei így a róla
+> szóló szöveg mellett] → teljes ár-panel + foglalás gombok [a döntési pont
+> minden infó után; lejárt dealnél halványított árak + „Nézd meg az aktuális
+> árat" gomb, a kártyával egyezően] → megosztás → úticél-ajánló → hasonló
+> ajánlatok [zárásként, már nem a leírás előtt]. A `the_content` filter
+> mostantól `$felso . $content . $also`-t ad vissza. A chip-CSS
+> [`.tpa-single-info`, `.tpa-chip-utvonal`] kivezetve, sima görgetés
+> `prefers-reduced-motion` tisztelettel.)
 > (1.14.1: élő-oldal review finomításai. Kártyán az egytételes ár-bontás
 > nem duplázza az Összesent [csak 2 tételnél vannak részár-sorok,
 > `.tpa-card-ar-osszesen-egyedul`]; „Találat: júl. 14." helyes magyar

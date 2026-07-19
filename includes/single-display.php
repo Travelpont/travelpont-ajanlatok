@@ -73,8 +73,15 @@ add_filter( 'the_content', function( $content ) {
 
     ob_start();
     include TPA_PATH . 'templates/single-content.php';
-    $ajanlat_doboz = ob_get_clean();
+    $felso = ob_get_clean();
 
-    // Doboz felül (ár + gombok azonnal láthatók), a leírás alatta
-    return $ajanlat_doboz . $content;
+    ob_start();
+    include TPA_PATH . 'templates/single-also.php';
+    $also = ob_get_clean();
+
+    // A leírás a felső rész (hero, kompakt ár, tények, "miért szuper") és az
+    // alsó rész (galéria, ár-panel + gombok, megosztás, ajánlók) KÖZÉ kerül –
+    // így a szállás szövege és képei egymás mellett vannak, a foglalási döntés
+    // pedig a teljes információ után jön (2026-07-19 UX-átrendezés).
+    return $felso . $content . $also;
 } );

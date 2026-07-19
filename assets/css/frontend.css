@@ -373,6 +373,9 @@
 }
 
 /* ── Aloldali ajánlat-doboz ─────────────────────────────────────────────── */
+/* Két részre válik: .tpa-single-felso a leírás ELŐTT (hero, kompakt ár,
+   tény-sáv, "miért szuper"), .tpa-single-also a leírás UTÁN (galéria,
+   ár-panel + gombok, megosztás, úticél-ajánló, hasonló ajánlatok). */
 .tpa-single-doboz {
     background: var(--tpa-card-bg);
     border: 1px solid var(--tpa-card-border);
@@ -380,6 +383,10 @@
     box-shadow: var(--tpa-shadow);
     padding: 1.5rem;
     margin: 0 0 2rem;
+}
+
+.tpa-single-also {
+    margin-top: 2rem;
 }
 
 .tpa-lejart-jelzes {
@@ -436,52 +443,107 @@
     margin: 0 .1rem;
 }
 
-/* ── Infó-sor (chip-ek) ──────────────────────────────────────────────────── */
-.tpa-single-info {
-    list-style: none;
-    margin: 0 0 1.25rem;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: .6rem;
-}
-
-.tpa-single-info li {
+/* ── Kompakt ár-sor (a hero alatt: az ár a horog, a gomb a panelre ugrik) ── */
+.tpa-kompakt-ar {
     display: flex;
     align-items: center;
-    gap: .45rem;
-    margin: 0;
-    background: #f1f5f9;
-    border-radius: 999px;
-    padding: .45rem .9rem .45rem .8rem;
+    justify-content: space-between;
+    gap: 1rem;
+    background: #f0fdfa;
+    border: 1px solid #ccfbf1;
+    border-radius: 12px;
+    padding: .8rem 1.1rem;
+    margin: 0 0 1rem;
+}
+
+.tpa-kompakt-ar-blokk {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: .5rem;
+    min-width: 0;
+}
+
+.tpa-kompakt-ar-osszeg {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--tpa-primary);
+    white-space: nowrap;
+}
+
+.tpa-kompakt-ar-megjegyzes {
+    color: var(--tpa-text-light);
     font-size: .85rem;
 }
 
-.tpa-info-cimke {
-    color: var(--tpa-text-light);
+/* Ugrás a foglaláshoz: az ár-panel ne csússzon a fix fejléc alá */
+#tpa-foglalas {
+    scroll-margin-top: 90px;
 }
 
-.tpa-info-ertek {
-    font-weight: 600;
-    color: var(--tpa-text);
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
 }
 
-/* Útvonal-chip: kétsoros tartalom (kód + város), ezért enyhébb lekerekítés */
-.tpa-chip-utvonal {
-    border-radius: 14px !important;
-    align-items: flex-start !important;
+/* ── Tény-sáv (a chipek helyett két címzett csoport: Utazás / Szállás) ───── */
+.tpa-teny-sav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: .75rem;
+    margin: 0 0 1.25rem;
 }
 
-.tpa-chip-utvonal .tpa-icon,
-.tpa-chip-utvonal .tpa-info-cimke {
-    margin-top: .1em;
-}
-
-.tpa-utvonal-blokk {
+.tpa-teny-csoport {
+    background: #f8fafc;
+    border: 1px solid var(--tpa-card-border);
+    border-radius: 12px;
+    padding: .85rem 1rem .95rem;
     display: flex;
     flex-direction: column;
-    gap: .05rem;
+    gap: .45rem;
+}
+
+.tpa-teny-cim {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    margin: 0 0 .15rem;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--tpa-primary);
+}
+
+.tpa-teny-sor {
+    display: flex;
+    align-items: baseline;
+    gap: .75rem;
+    font-size: .88rem;
+}
+
+.tpa-teny-cimke {
+    color: var(--tpa-text-light);
+    flex-shrink: 0;
+}
+
+.tpa-teny-ertek {
+    margin-left: auto;
+    text-align: right;
+    font-weight: 600;
+    color: var(--tpa-text);
     min-width: 0;
+    word-break: break-word;
+}
+
+/* Útvonal-érték: kétsoros (kód + kisbetűs városok) */
+.tpa-teny-utvonal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .05rem;
 }
 
 /* ── "Miért szuper ez az ajánlat?" – Petra személyes érvei ───────────────── */
@@ -533,6 +595,17 @@
     border-radius: 12px;
     padding: 1.25rem 1.25rem 1.1rem;
     margin: 0 0 1.5rem;
+}
+
+/* Lejárt deal ár-panelje: az árak halványítva + áthúzva (a kártyával egyezően) */
+.tpa-ar-lejart .tpa-single-ar-bontas,
+.tpa-ar-lejart .tpa-single-ar-blokk {
+    opacity: .55;
+}
+
+.tpa-ar-lejart .tpa-single-ar,
+.tpa-ar-lejart .tpa-single-ar-bontas li span:last-child {
+    text-decoration: line-through;
 }
 
 /* Ár-bontás (repjegy/busz/szállás tételsorok a végösszeg fölött) */
@@ -955,31 +1028,22 @@
         border-radius: 12px;
     }
 
-    /* Infó-chipek: teljes szélességű sorok – címke balra, érték jobbra;
-       így nincs több szó közepén törő "Érvény-es" / "Időp-ont" */
-    .tpa-single-info {
-        gap: .4rem;
+    /* Kompakt ár-sor: mobilon az összeg és a gomb egymás alá kerül */
+    .tpa-kompakt-ar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: .6rem;
+        text-align: center;
     }
 
-    .tpa-single-info li {
-        width: 100%;
-        border-radius: 12px;
+    .tpa-kompakt-ar-blokk {
+        justify-content: center;
     }
 
-    .tpa-info-cimke {
-        flex-shrink: 0;
-    }
-
-    .tpa-single-info li .tpa-info-ertek {
-        margin-left: auto;
-        text-align: right;
-        min-width: 0;
-    }
-
-    .tpa-single-info li .tpa-utvonal-blokk {
-        margin-left: auto;
-        align-items: flex-end;
-        text-align: right;
+    /* A tény-sáv az auto-fit grid miatt magától egy oszlopba esik – csak a
+       csoportok belső levegőjét fogjuk vissza */
+    .tpa-teny-csoport {
+        padding: .75rem .85rem .85rem;
     }
 
     .tpa-single-ar-panel {
