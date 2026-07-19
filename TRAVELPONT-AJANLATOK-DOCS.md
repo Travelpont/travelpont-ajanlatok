@@ -1,6 +1,16 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.17.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.17.1 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.17.1: Playwright-os vizuális kör [1920/2560/mobil screenshotok alapján].
+> [1] Új `cim="auto"` shortcode-attribútum: a lista fölé egységes címsort ír
+> [`.tpa-lista-cim`, a lista-template rendereli] – hasonló-módban „További
+> ajánlatok", úticél-módban „Ajánlataink ehhez az úticélhoz", más
+> használatnál nincs; saját szöveg megadható, `cim=""` = kikapcsolva. Így a
+> sidebar-widgetekbe NEM kell külön Címsor blokk. [2] Nagy kijelzőn a hero
+> nem uralja az első képernyőt: `.tpa-single-hero { max-width: 780px }`
+> [KICSINYÍT, nem vág – a képbe szerkesztett felirat egészben marad] ÉS a
+> `.single-ajanlat .entry-content-wrap { max-width: 860px }` – 1920/2560-on
+> a sorok se nyúljanak olvashatatlanul hosszúra.)
 > (1.17.0: KOMPAKT KÁRTYA + ÚTICÉL-MÓD az oldalsávokhoz. Új
 > `nezet="kompakt"` attribútum → `templates/card-kompakt.php`: borítókép
 > [16:9 marad, feliratos képkonvenció!] → cím → időpont [+ éj] → ár

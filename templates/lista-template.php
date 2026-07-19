@@ -19,6 +19,10 @@ $kartya_sablon = ( isset( $tpa_atts['nezet'] ) && $tpa_atts['nezet'] === 'kompak
     ? 'templates/card-kompakt.php'
     : 'templates/card-template.php';
 ?>
+
+<?php if ( ! empty( $tpa_lista_cim ) ) : ?>
+    <h3 class="tpa-lista-cim"><?php echo esc_html( $tpa_lista_cim ); ?></h3>
+<?php endif; ?>
 <?php if ( $tpa_query->have_posts() ) : ?>
     <div class="tpa-grid" style="--tpa-card-min: <?php echo esc_attr( $min_szelesseg[ $oszlopok ] ); ?>;">
         <?php

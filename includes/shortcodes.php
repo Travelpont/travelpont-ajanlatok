@@ -22,6 +22,10 @@
  *   nezet="teljes"     "kompakt": kis kártya oldalsávba – borítókép, cím,
  *                      időpont, ár + "Megnézem" gomb az ajánlat aloldalára
  *                      (nincs ár-bontás, foglalás-gombok, frissesség-sáv).
+ *   cim="auto"         a lista fölé írt címsor. "auto": hasonló-módban
+ *                      "További ajánlatok", úticél-módban "Ajánlataink
+ *                      ehhez az úticélhoz", egyébként nincs cím. Saját
+ *                      szöveg megadható, cim="" = soha nincs cím.
  *
  * Ajánlott oldalsáv-használat:
  *   ajánlat-aloldal:  [travelpont_ajanlatok limit="3" hasonlo="igen" oszlopok="1" nezet="kompakt"]
@@ -43,6 +47,7 @@ function tpa_ajanlatok_shortcode( $atts ) {
         'hasonlo'  => 'nem',
         'uticel'   => 'nem',
         'nezet'    => 'teljes',
+        'cim'      => 'auto',
     ) ), $atts, 'travelpont_ajanlatok' );
 
     $args = array(
@@ -127,6 +132,19 @@ function tpa_ajanlatok_shortcode( $atts ) {
     // Lejárt ajánlatok kiszűrése (alapértelmezés)
     if ( $atts['lejartak'] !== 'igen' ) {
         $args['meta_query'][] = tpa_nem_lejart_meta_query();
+    }
+
+    // Lista-cím: az "auto" a mód szerinti alapcímet adja – így minden
+    // oldalsáv egységes felirattal jelenik meg, külön widget-cím nélkül.
+    $tpa_lista_cim = $atts['cim'];
+    if ( $tpa_lista_cim === 'auto' ) {
+        if ( $atts['hasonlo'] === 'igen' && is_singular( 'ajanlat' ) ) {
+            $tpa_lista_cim = 'További ajánlatok';
+        } elseif ( $atts['uticel'] === 'aktualis' && is_singular( 'uticel' ) ) {
+            $tpa_lista_cim = 'Ajánlataink ehhez az úticélhoz';
+        } else {
+            $tpa_lista_cim = '';
+        }
     }
 
     // Bővítési pont: a lekérdezés kívülről is módosítható

@@ -20,6 +20,14 @@
     --tpa-shadow-hover:  0 10px 25px rgba(0, 0, 0, .12);
 }
 
+/* ── Lista-cím (a shortcode cim="" attribútuma – oldalsávokban egységes) ── */
+.tpa-lista-cim {
+    margin: 0 0 .9rem;
+    font-size: 1.15rem;
+    line-height: 1.3;
+    color: var(--tpa-text);
+}
+
 /* ── Kártyarács ─────────────────────────────────────────────────────────── */
 .tpa-grid {
     display: grid;
@@ -427,6 +435,15 @@
     margin-top: 2rem;
 }
 
+/* Nagy kijelzőn (1920/2560) a téma tartalom-kártyája 1200px fölé nő – a
+   sorok olvashatatlanul hosszúra nyúlnak, a hero pedig az egész képernyőt
+   uralja. A kártyát észszerű szélességre fogjuk, CSAK az ajánlat-oldalon. */
+.single-ajanlat .entry-content-wrap {
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .tpa-lejart-jelzes {
     background: #fef2f2;
     border: 1px solid #fecaca;
@@ -439,7 +456,12 @@
 
 /* ── Hero kép (kiemelt kép) ─────────────────────────────────────────────── */
 .tpa-single-hero {
-    margin: 0 0 1.25rem;
+    margin: 0 auto 1.25rem;
+    /* Nagy kijelzőn (1920/2560) a téma tartalom-hasábja 1200px fölé nő – a
+       teljes szélességű 16:9 kép ott az egész első képernyőt uralná, az ár
+       a hajtás alá szorulna. A szélesség-korlát a képet KICSINYÍTI (nem
+       vágja!), így a képbe szerkesztett felirat is egészben marad. */
+    max-width: 780px;
     /* 16:9 – a feliratos borítókép natív aránya (lásd .tpa-card-kep).
        Korábban 21/8 volt, ami levágta a képbe szerkesztett feliratot. */
     aspect-ratio: 16 / 9;
