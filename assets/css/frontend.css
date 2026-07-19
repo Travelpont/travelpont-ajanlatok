@@ -314,20 +314,7 @@
     color: var(--tpa-text-light);
 }
 
-/* Ár-frissesség figyelmeztetés (a találat régebbi a beállított küszöbnél) */
-.tpa-card-frissesseg {
-    margin: 0;
-    font-size: .78rem;
-    line-height: 1.4;
-    color: #92400e;
-    background: #fffbeb;
-    border: 1px solid #fde68a;
-    border-radius: 8px;
-    padding: .45rem .6rem;
-}
-
-/* Lejárt deal a kártyán: az áthúzást a sorokra tett .tpa-ar-athuzva osztály
-   végzi (utazás + Összesen sor – a szállás ára érintetlen marad) */
+/* Lejárt deal a kártyán: az Összesen sort a .tpa-ar-athuzva osztály húzza át */
 .tpa-card-lejart-uzenet {
     margin: 0;
     font-size: .82rem;
@@ -344,18 +331,6 @@
 
 .tpa-card-gombok .tpa-gomb {
     width: 100%;
-}
-
-.tpa-card-uticel-link {
-    text-align: center;
-    font-size: .85rem;
-    font-weight: 600;
-    color: var(--tpa-primary);
-    text-decoration: none;
-}
-
-.tpa-card-uticel-link:hover {
-    text-decoration: underline;
 }
 
 /* ── Kompakt kártya (oldalsávba: kép, cím, időpont, ár, Megnézem gomb) ──── */

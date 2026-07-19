@@ -1,6 +1,18 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.17.3 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.18.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.18.0: LISTA-KÁRTYA KARCSÚSÍTÁS [Gabesz döntése: a kártya dolga a
+> figyelemfelkeltés, a foglalás az aloldalon történik]. A card-template.php-ról
+> lekerült: ár-bontás sorok [repjegy/szállás – csak az „Összesen: X Ft / N fő"
+> maradt], szállás-sor [név+csillag+ellátás], sárga frissesség-figyelmeztetés
+> [a szövege amúgy is a foglalási linkre hivatkozott, ami már nincs a kártyán],
+> és MINDKÉT foglalás gomb + lejárt-módú aktuális-ár/úticél-linkek – helyettük
+> egyetlen „Megnézem" gomb a permalinkre. Maradt: hely, időpont+éj, útvonal
+> [BUD → PVK], kis Találat-dátum, lejárt üzenet. Lejártnál új „Lejárt" badge a
+> képen [a kompakt kártya mintája] + áthúzott Összesen. A kompakt kártya és a
+> kezdőlap-modul kártyája NEM változott; a single oldal foglalás gombjai/
+> frissesség-infója érintetlen. CSS: .tpa-card-frissesseg és
+> .tpa-card-uticel-link szabályok törölve [árvák lettek].)
 > (1.17.3: az edge-to-edge mobil nézet kiterjesztve a kártyarácsot
 > tartalmazó sima oldalakra is [`body.page:has(.tpa-grid)` – pl. az
 > /ajanlatok/ lista; a :has() 2026-ban már mindenhol támogatott], és a
