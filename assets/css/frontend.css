@@ -1070,32 +1070,39 @@
 @media (max-width: 600px) {
     /* Teljes szélig érő (edge-to-edge) mobil nézet: a téma oldalsó
        térköze és a kártya-keret eltűnik, a fehér felület a képernyő
-       széléig fut – a szöveg az entry-content-wrap 1rem paddingjével
-       kap levegőt. CSAK az ajánlat-oldalon. */
-    .single-ajanlat .content-container.site-container {
+       széléig fut – a szöveg az entry-content-wrap paddingjével kap
+       levegőt. Érvényes az ajánlat-aloldalon ÉS minden olyan sima
+       oldalon, amin ajánlat-kártyarács van (pl. az /ajanlatok/ lista). */
+    .single-ajanlat .content-container.site-container,
+    body.page:has(.tpa-grid) .content-container.site-container {
         padding-left: 0;
         padding-right: 0;
     }
 
-    .single-ajanlat .content-area {
+    .single-ajanlat .content-area,
+    body.page:has(.tpa-grid) .content-area {
         margin-top: 0;
         margin-bottom: 0;
     }
 
-    .single-ajanlat .entry.single-entry {
+    .single-ajanlat .entry.single-entry,
+    body.page:has(.tpa-grid) .entry.single-entry {
         box-shadow: none;
         border-radius: 0;
     }
 
     /* Az oldalsáv (mobilon a tartalom alatt) ne tapadjon a képernyő szélére */
-    .single-ajanlat .primary-sidebar {
-        padding-left: 1rem;
-        padding-right: 1rem;
+    .single-ajanlat .primary-sidebar,
+    body.page:has(.tpa-grid) .primary-sidebar {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
     }
 
-    /* A téma tartalom-kártyájának paddingje mérsékelve – CSAK az ajánlat-oldalon */
-    .single-ajanlat .entry-content-wrap {
-        padding: 1.25rem 1rem;
+    /* A tartalom oldaltávja: 20px – éltől élig futó felületen a 16px
+       kevésnek bizonyult, a betűk a kijelző szélére estek */
+    .single-ajanlat .entry-content-wrap,
+    body.page:has(.tpa-grid) .entry-content-wrap {
+        padding: 1.25rem;
     }
 
     /* A cím ne szavanként törjön óriás betűkkel */

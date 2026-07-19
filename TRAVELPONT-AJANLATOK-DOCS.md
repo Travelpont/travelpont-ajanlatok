@@ -1,6 +1,11 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.17.2 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.17.3 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.17.3: az edge-to-edge mobil nézet kiterjesztve a kártyarácsot
+> tartalmazó sima oldalakra is [`body.page:has(.tpa-grid)` – pl. az
+> /ajanlatok/ lista; a :has() 2026-ban már mindenhol támogatott], és a
+> tartalom oldaltávja 16px→20px [1.25rem] – éltől élig futó felületen a
+> betűk a kijelző szélére estek. Párja: uticelok v1.20.5.)
 > (1.17.2: teljes szélig érő [edge-to-edge] mobil nézet az ajánlat-oldalon
 > [Gabesz kérése]: ≤600px-en a téma oldalsó térköze
 > [`.content-container.site-container` padding] és a kártya-keret
