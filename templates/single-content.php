@@ -136,7 +136,11 @@ if ( $szallas_ar !== '' ) {
                     <?php
                     $ar_tartalom = tpa_ar_tartalom_szoveg( $post_id );
                     if ( $ar_tartalom !== '' ) echo esc_html( $ar_tartalom ) . ' ';
-                    ?>Árak ellenőrizve: <?php echo esc_html( get_the_modified_date( 'Y. F j.', $post_id ) ); ?> – a foglalási oldalon az aktuális ár ettől eltérhet.
+                    // A találat dátuma az árak tényleges ellenőrzésének napja – a
+                    // módosítás dátuma bármilyen szerkesztéstől frissülne, az félrevezető.
+                    $arak_ellenorizve = tpa_mezo( $post_id, 'tpa_talalat_datuma' );
+                    if ( $arak_ellenorizve === '' ) $arak_ellenorizve = get_the_modified_date( 'Y-m-d', $post_id );
+                    ?>Árak ellenőrizve: <?php echo esc_html( tpa_datum_magyar( $arak_ellenorizve ) ); ?> – a foglalási oldalon az aktuális ár ettől eltérhet.
                 </p>
             <?php endif; ?>
 

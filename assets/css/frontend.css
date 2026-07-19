@@ -290,6 +290,12 @@
     font-size: 1.05rem;
 }
 
+/* Ha az Összesen sor egyedül áll (egytételes deal), nem kell fölé elválasztó */
+.tpa-card-ar-osszesen-egyedul {
+    padding-top: 0;
+    border-top: none;
+}
+
 .tpa-card-talalat {
     font-size: .75rem;
     color: var(--tpa-text-light);

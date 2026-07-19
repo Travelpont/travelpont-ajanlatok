@@ -97,22 +97,25 @@ if ( ! $kartya_uticel_post || $kartya_uticel_post->post_type !== 'uticel' || $ka
         </ul>
 
         <div class="tpa-card-lablec tpa-card-lablec-deal">
+            <?php
+            // Részár-sorok csak akkor, ha legalább 2 tétel van – egytételes
+            // bontás (pl. csak szállás) csak duplázná az Összesen sort.
+            $ket_tetel = ( $utazas['ar'] !== '' && $szallas_ar !== '' );
+            ?>
             <?php if ( $utazas['ar'] !== '' || $szallas_ar !== '' || $ar !== '' ) : ?>
                 <ul class="tpa-card-ar-bontas">
-                    <?php if ( $utazas['ar'] !== '' ) : ?>
+                    <?php if ( $ket_tetel ) : ?>
                         <li><span><?php echo esc_html( $utazas['cimke'] ); ?>:</span><span class="tpa-card-ar-ertek"><?php echo esc_html( tpa_ar_format( $utazas['ar'] ) ); ?>/fő</span></li>
-                    <?php endif; ?>
-                    <?php if ( $szallas_ar !== '' ) : ?>
                         <li><span>Szállás:</span><span class="tpa-card-ar-ertek"><?php echo esc_html( tpa_ar_format( $szallas_ar ) ); ?></span></li>
                     <?php endif; ?>
                     <?php if ( $ar !== '' ) : ?>
-                        <li class="tpa-card-ar-osszesen"><span>Összesen:</span><span class="tpa-card-ar-ertek"><?php echo esc_html( tpa_ar_format( $ar ) ); ?> / <?php echo esc_html( $fo_szam ); ?> fő</span></li>
+                        <li class="tpa-card-ar-osszesen<?php echo $ket_tetel ? '' : ' tpa-card-ar-osszesen-egyedul'; ?>"><span>Összesen:</span><span class="tpa-card-ar-ertek"><?php echo esc_html( tpa_ar_format( $ar ) ); ?> / <?php echo esc_html( $fo_szam ); ?> fő</span></li>
                     <?php endif; ?>
                 </ul>
             <?php endif; ?>
 
             <?php if ( $talalat ) : ?>
-                <span class="tpa-card-talalat">Találat: <?php echo esc_html( tpa_datum_magyar( $talalat, 'M j.' ) ); ?></span>
+                <span class="tpa-card-talalat">Találat: <?php echo esc_html( tpa_datum_magyar_rovid( $talalat ) ); ?></span>
             <?php endif; ?>
 
             <?php if ( $deal_lejart ) : ?>

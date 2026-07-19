@@ -1,6 +1,15 @@
 # Travelpont Ajánlatok plugin – dokumentáció
 
-> Verzió: 1.14.0 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> Verzió: 1.14.1 · Az aktivbalaton.hu egyedi plugin-konvenciók mintájára
+> (1.14.1: élő-oldal review finomításai. Kártyán az egytételes ár-bontás
+> nem duplázza az Összesent [csak 2 tételnél vannak részár-sorok,
+> `.tpa-card-ar-osszesen-egyedul`]; „Találat: júl. 14." helyes magyar
+> hónap-rövidítéssel [`tpa_datum_magyar_rovid()` – a WP hu_HU 'M' nem tesz
+> pontot]; a kézi időpont-szöveg "2026.augusztus" elütése kiíráskor javul
+> [szóköz-pótlás, a mentett érték marad]; az aloldali „Árak ellenőrizve" a
+> TALÁLAT dátumát mutatja a módosítás dátuma helyett [az bármely mentéstől
+> frissülne – félrevezető]; a Schema.org Offer availability a kézi Lejárt
+> státuszra is Discontinued [`tpa_deal_lejart()`].)
 > (1.14.0: DEAL-LOGIKA. **ÁR-SZEMANTIKA VÁLTÁS: a `tpa_repjegy_ar` és
 > `tpa_busz_ar` mostantól FŐNKÉNTI ár [Ft/fő]** – a korábbi 2 fős csomagár
 > helyett; az összesen ár képlete: főnkénti utazási ár × `tpa_fo_szam`

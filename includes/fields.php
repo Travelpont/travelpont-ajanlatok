@@ -371,6 +371,16 @@ function tpa_datum_magyar( $iso, $format = 'Y. F j.' ) {
     return $ts ? date_i18n( $format, $ts ) : '';
 }
 
+// ── Rövid magyar dátum: "2026-07-14" → "júl. 14." ─────────────────────────────
+// A WP hu_HU 'M' formátuma pont nélkül rövidít ("júl"), a magyar helyesírás
+// szerint viszont pont kell a rövidítés után – ezért saját lista.
+function tpa_datum_magyar_rovid( $iso ) {
+    $ts = $iso ? strtotime( $iso ) : false;
+    if ( ! $ts ) return '';
+    $honapok = array( 1 => 'jan.', 'febr.', 'márc.', 'ápr.', 'máj.', 'jún.', 'júl.', 'aug.', 'szept.', 'okt.', 'nov.', 'dec.' );
+    return $honapok[ (int) gmdate( 'n', $ts ) ] . ' ' . (int) gmdate( 'j', $ts ) . '.';
+}
+
 // ── Éjszakák száma: a dátumokból számolva, vagy (ha nincsenek) a kézi mezőből ─
 function tpa_ejszakak_szam( $post_id ) {
     $indul = tpa_mezo( $post_id, 'tpa_indulas_datum' );
@@ -402,7 +412,9 @@ function tpa_idopont_megjelenites( $post_id ) {
         return date_i18n( 'Y. F j', $i ) . '. – ' . date_i18n( 'Y. F j', $h ) . '.';
     }
 
-    return tpa_mezo( $post_id, 'tpa_idopont' );
+    // Kézi szöveg – tipikus elütés javítása kiíráskor: "2026.augusztus" →
+    // "2026. augusztus" (a mentett érték változatlan marad).
+    return preg_replace( '/^(\d{4})\.(?=\S)/u', '$1. ', tpa_mezo( $post_id, 'tpa_idopont' ) );
 }
 
 // ── Ár-megjegyzés kiírása: kézi szöveg, vagy típus szerinti alapszöveg ────────

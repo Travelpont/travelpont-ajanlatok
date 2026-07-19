@@ -49,7 +49,7 @@ add_action( 'wp_head', function() {
             'price'         => (string) $ar,
             'priceCurrency' => 'HUF',
             'url'           => get_permalink( $post_id ),
-            'availability'  => tpa_lejart( $post_id ) ? 'https://schema.org/Discontinued' : 'https://schema.org/InStock',
+            'availability'  => tpa_deal_lejart( $post_id ) ? 'https://schema.org/Discontinued' : 'https://schema.org/InStock',
         );
         $ervenyes = tpa_mezo( $post_id, 'tpa_ervenyes' );
         if ( $ervenyes ) {
